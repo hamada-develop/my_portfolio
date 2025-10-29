@@ -18,61 +18,32 @@ class _HomeView2State extends State<HomeView2>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final RailAnimation _railAnimation;
-  late ColorScheme _colorScheme;
-
   late final HomeCubit _homeCubit;
-
-  int selectedIndex = 0;
-  bool controllerInitialized = false;
-  double _lastWidth = 0;
 
   @override
   void initState() {
     super.initState();
     _homeCubit = HomeCubit();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 350), // Faster, smoother
-      reverseDuration: const Duration(milliseconds: 350), // Consistent speed
-      value: 0,
+      duration: const Duration(milliseconds: 350),
+      reverseDuration: const Duration(milliseconds: 350),
       vsync: this,
     );
     _railAnimation = RailAnimation(parent: _controller);
+
+    // Initialize controller value based on initial screen size
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final width = MediaQuery.sizeOf(context).width;
+      _controller.value = width > 600 ? 1 : 0;
+      _homeCubit.updateDeviceWidth(width);
+    });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _colorScheme = Theme.of(context).colorScheme;
-
     final double width = MediaQuery.sizeOf(context).width;
-
-    // Avoid unnecessary animations on minor width changes
-    if ((width - _lastWidth).abs() < 10 && controllerInitialized) {
-      return;
-    }
-    _lastWidth = width;
-
-    // Set initial state without animation
-    if (!controllerInitialized) {
-      controllerInitialized = true;
-      _controller.value = width > 600 ? 1 : 0;
-      return;
-    }
-
-    // Animate only when crossing the threshold
-    print('test rebuild ..... ');
-    final AnimationStatus status = _controller.status;
-    if (width > 600) {
-      if (status != AnimationStatus.forward &&
-          status != AnimationStatus.completed) {
-        _controller.forward();
-      }
-    } else {
-      if (status != AnimationStatus.reverse &&
-          status != AnimationStatus.dismissed) {
-        _controller.reverse();
-      }
-    }
+    _homeCubit.updateDeviceWidth(width);
   }
 
   @override
@@ -82,68 +53,105 @@ class _HomeView2State extends State<HomeView2>
     super.dispose();
   }
 
+  void _animateRailBasedOnWidth(double width) {
+    if (width > 600) {
+      if (_controller.status != AnimationStatus.forward &&
+          _controller.status != AnimationStatus.completed) {
+        _controller.forward();
+      }
+    } else {
+      if (_controller.status != AnimationStatus.reverse &&
+          _controller.status != AnimationStatus.dismissed) {
+        _controller.reverse();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return BlocProvider.value(
       value: _homeCubit,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, _) {
-          return Scaffold(
-            backgroundColor: _colorScheme.surfaceBright,
-            body: Row(
-              children: [
-                RepaintBoundary(
-                  child: BlocBuilder<HomeCubit, HomeState>(
-                    buildWhen: (previous, current) =>
-                        previous.destination != current.destination,
-                    builder: (context, state) {
-                      return DisappearingNavigationRail(
-                        railAnimation: _railAnimation,
-                        selectedIndex: state.destination,
-                        backgroundColor: _colorScheme.surfaceBright,
-                        onDestinationSelected: (index) {
-                          _homeCubit.changeDestination(index);
-                        },
-                      );
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: RepaintBoundary(
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        top: 24,
-                        left: 16,
-                        right: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _colorScheme.surface,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                      ),
-                      child: HomeContent(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            floatingActionButton: RepaintBoundary(
-              child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  return AnimatedFAB(
-                    onPressed: () {},
-                    icon: Icons.download,
-                    isVisible: constraints.maxWidth < 600,
-                  );
-                },
-              ),
-            ),
-          );
+      child: BlocListener<HomeCubit, HomeState>(
+        listenWhen: (previous, current) =>
+        previous.deviceWide != current.deviceWide,
+        listener: (context, state) {
+          // Animate rail based on device width changes
+          final width = MediaQuery.sizeOf(context).width;
+          _animateRailBasedOnWidth(width);
         },
+        child: Scaffold(
+          backgroundColor: colorScheme.surfaceBright,
+          body: Row(
+            children: [
+              // Navigation Rail - only rebuilds when destination changes
+              RepaintBoundary(
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    return BlocSelector<HomeCubit, HomeState, int>(
+                      selector: (state) => state.destination,
+                      builder: (context, destination) {
+                        return DisappearingNavigationRail(
+                          railAnimation: _railAnimation,
+                          selectedIndex: destination,
+                          backgroundColor: colorScheme.surfaceBright,
+                          onDestinationSelected: _homeCubit.changeDestination,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              // Main Content - isolated from navigation changes
+              Expanded(
+                child: RepaintBoundary(
+                  child: _ContentContainer(colorScheme: colorScheme),
+                ),
+              ),
+            ],
+          ),
+          floatingActionButton: RepaintBoundary(
+            child: BlocSelector<HomeCubit, HomeState, DeviceWide>(
+              selector: (state) => state.deviceWide,
+              builder: (context, deviceWide) {
+                return AnimatedFAB(
+                  onPressed: () {},
+                  icon: Icons.download,
+                  isVisible: deviceWide == DeviceWide.small,
+                );
+              },
+            ),
+          ),
+        ),
       ),
+    );
+  }
+}
+
+/// Extracted content container to prevent unnecessary rebuilds
+class _ContentContainer extends StatelessWidget {
+  final ColorScheme colorScheme;
+
+  const _ContentContainer({required this.colorScheme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(
+        top: 24,
+        left: 16,
+        right: 16,
+      ),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: const HomeContent(),
     );
   }
 }
