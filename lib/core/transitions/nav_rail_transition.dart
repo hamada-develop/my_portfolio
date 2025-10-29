@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../animations.dart';
 
 class NavRailTransition extends StatefulWidget {
   const NavRailTransition({
@@ -18,35 +17,41 @@ class NavRailTransition extends StatefulWidget {
 }
 
 class _NavRailTransitionState extends State<NavRailTransition> {
-  // The animations are only rebuilt by this method when the text
-  // direction changes because this widget only depends on Directionality.
   late final bool ltr = Directionality.of(context) == TextDirection.ltr;
+
+  // Use easeInOutCubic for smoother animations
   late final Animation<Offset> offsetAnimation = Tween<Offset>(
     begin: ltr ? const Offset(-1, 0) : const Offset(1, 0),
     end: Offset.zero,
-  ).animate(OffsetAnimation(parent: widget.animation));
+  ).animate(
+    CurvedAnimation(
+      parent: widget.animation,
+      curve: Curves.easeInOutCubic, // Smoother curve
+    ),
+  );
+
   late final Animation<double> widthAnimation = Tween<double>(
     begin: 0,
     end: 1,
-  ).animate(SizeAnimation(parent: widget.animation));
+  ).animate(
+    CurvedAnimation(
+      parent: widget.animation,
+      curve: Curves.easeInOutCubic, // Match the curve
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
     return ClipRect(
       child: DecoratedBox(
         decoration: BoxDecoration(color: widget.backgroundColor),
-        child: AnimatedBuilder(
-          animation: widthAnimation,
-          builder: (context, child) {
-            return Align(
-              alignment: Alignment.topLeft,
-              widthFactor: widthAnimation.value,
-              child: FractionalTranslation(
-                translation: offsetAnimation.value,
-                child: widget.child,
-              ),
-            );
-          },
+        child: Align(
+          alignment: Alignment.topLeft,
+          widthFactor: widthAnimation.value,
+          child: FractionalTranslation(
+            translation: offsetAnimation.value,
+            child: widget.child,
+          ),
         ),
       ),
     );
