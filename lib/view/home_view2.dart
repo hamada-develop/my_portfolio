@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/animations.dart';
 import '../core/widgets/animated_floating_action_button.dart';
+import '../core/widgets/disappearing_navigation_bottom.dart';
 import '../core/widgets/disappearing_navigation_rail.dart';
 
 class HomeView2 extends StatefulWidget {
@@ -19,6 +20,7 @@ class _HomeView2State extends State<HomeView2>
   late final AnimationController _controller;
   late final RailAnimation _railAnimation;
   late final HomeCubit _homeCubit;
+
 
   @override
   void initState() {
@@ -75,7 +77,7 @@ class _HomeView2State extends State<HomeView2>
       value: _homeCubit,
       child: BlocListener<HomeCubit, HomeState>(
         listenWhen: (previous, current) =>
-        previous.deviceWide != current.deviceWide,
+            previous.deviceWide != current.deviceWide,
         listener: (context, state) {
           // Animate rail based on device width changes
           final width = MediaQuery.sizeOf(context).width;
@@ -112,6 +114,12 @@ class _HomeView2State extends State<HomeView2>
               ),
             ],
           ),
+          bottomNavigationBar: DisappearingNavigationBottom(
+            selectedIndex: 0,
+            onDestinationSelected: (index) {
+
+            }, backgroundColor: colorScheme.surfaceBright,
+          ),
           floatingActionButton: RepaintBoundary(
             child: BlocSelector<HomeCubit, HomeState, DeviceWide>(
               selector: (state) => state.deviceWide,
@@ -139,11 +147,7 @@ class _ContentContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(
-        top: 24,
-        left: 16,
-        right: 16,
-      ),
+      margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.only(
@@ -155,3 +159,22 @@ class _ContentContainer extends StatelessWidget {
     );
   }
 }
+
+
+
+class Destination {
+  const Destination(this.icon, this.label);
+  final IconData icon;
+  final String label;
+}
+
+const List<Destination> destinations = <Destination>[
+  Destination(Icons.home_rounded, 'Home'),
+  Destination(Icons.person_rounded, 'About'),
+  Destination(Icons.code_rounded, 'Projects'),
+  Destination(Icons.work_rounded, 'Experience'),
+  Destination(Icons.emoji_objects_rounded, 'Skills'),
+  Destination(Icons.contact_mail_rounded, 'Contact'),
+];
+
+

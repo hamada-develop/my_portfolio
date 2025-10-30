@@ -1,6 +1,4 @@
-import 'package:book/core/style.dart';
 import 'package:book/core/theme.dart';
-import 'package:book/view/home_view.dart';
 import 'package:book/view/home_view2.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: MaterialTheme.darkScheme()
       ),
-      home: HomeView2(),
+      home: const HomeView2(),
     );
   }
 }

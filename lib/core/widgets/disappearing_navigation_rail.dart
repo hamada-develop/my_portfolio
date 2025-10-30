@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../view/home_view2.dart';
 import '../animations.dart';
 import '../transitions/nav_rail_transition.dart';
 import 'animated_floating_action_button.dart';
@@ -22,7 +23,6 @@ class DisappearingNavigationRail extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final isSmallScreen = size.width < 1000;
-
     return NavRailTransition(
       animation: railAnimation,
       backgroundColor: backgroundColor,
@@ -70,18 +70,3 @@ class DisappearingNavigationRail extends StatelessWidget {
   }
 }
 
-// Your existing Destination class and list
-class Destination {
-  const Destination(this.icon, this.label);
-  final IconData icon;
-  final String label;
-}
-
-const List<Destination> destinations = <Destination>[
-  Destination(Icons.home_rounded, 'Home'),
-  Destination(Icons.person_rounded, 'About'),
-  Destination(Icons.code_rounded, 'Projects'),
-  Destination(Icons.work_rounded, 'Experience'),
-  Destination(Icons.emoji_objects_rounded, 'Skills'),
-  Destination(Icons.contact_mail_rounded, 'Contact'),
-];
