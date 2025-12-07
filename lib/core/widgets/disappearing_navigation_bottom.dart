@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../view/home_view2.dart';
-import '../animations.dart';
-import '../transitions/nav_rail_transition.dart';
-import 'animated_floating_action_button.dart';
+import '../destinations.dart';
 
 class DisappearingNavigationBottom extends StatelessWidget {
   const DisappearingNavigationBottom({
@@ -27,6 +24,7 @@ class DisappearingNavigationBottom extends StatelessWidget {
       child: BottomNavigationBar(
         items: destinations.map((d) {
           return BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).colorScheme.surfaceBright,
             icon: Icon(d.icon,color: Colors.white,),
             label: d.label,
           );

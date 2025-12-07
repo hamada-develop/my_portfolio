@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../animations.dart';
 
 class NavRailTransition extends StatefulWidget {
   const NavRailTransition({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../view/home_view2.dart';
 import '../animations.dart';
+import '../destinations.dart';
 import '../transitions/nav_rail_transition.dart';
 import 'animated_floating_action_button.dart';
 
