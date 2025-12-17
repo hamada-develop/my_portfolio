@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_constants.dart';
 
 
-class HomeContent extends StatelessWidget {
-  const HomeContent({super.key});
+class HomeContent2 extends StatelessWidget {
+  const HomeContent2({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +18,10 @@ class HomeContent extends StatelessWidget {
       // controller: _scrollController,
       child: Column(
         children: [
+
+
           // Cover Section
-          const CoverSection(),
+          // const CoverSection(),
 
           // const SizedBox(height: AppConstants.spacing4xl),
           //

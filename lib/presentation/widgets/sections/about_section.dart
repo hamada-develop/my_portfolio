@@ -55,3 +55,33 @@ class AboutSection extends StatelessWidget {
     );
   }
 }
+
+
+
+
+class AboutSection2 extends StatelessWidget {
+  const AboutSection2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Calculates one full screen height
+    final screenHeight = MediaQuery.sizeOf(context).height;
+
+    return Container(
+      // Ensure it takes at least the full screen height
+      constraints: BoxConstraints(minHeight: screenHeight),
+      alignment: Alignment.center,
+      color: Colors.red.shade50, // Light red background
+      padding: const EdgeInsets.all(24),
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(radius: 80, backgroundColor: Colors.red),
+          SizedBox(height: 20),
+          Text("Hello, I'm Hamada", style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold)),
+          Text("Senior Flutter Developer", style: TextStyle(fontSize: 24)),
+        ],
+      ),
+    );
+  }
+}

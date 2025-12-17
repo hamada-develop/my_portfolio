@@ -1,4 +1,4 @@
-import 'package:book/presentation/screens/space_journey_intro_view.dart';
+import 'package:book/presentation/screens/home_view.dart';
 import 'package:flutter/material.dart';
 
 import 'core/theme.dart';
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'Portfolio',
       theme: ThemeData(colorScheme: MaterialTheme.darkScheme()),
       debugShowCheckedModeBanner: false,
-      home: const SpaceJourneyIntroView(),
+      home: HomeView(),
     );
   }
 }
