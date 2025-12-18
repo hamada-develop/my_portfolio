@@ -1,7 +1,7 @@
 import 'package:book/presentation/widgets/sections/achievements_section.dart';
 import 'package:book/presentation/widgets/sections/contact_section.dart';
 import 'package:book/presentation/widgets/sections/cover_section.dart';
-import 'package:book/presentation/widgets/sections/experience_section.dart';
+import 'package:book/presentation/widgets/sections/work_history_section.dart';
 import 'package:book/presentation/widgets/sections/projects_section.dart';
 import 'package:book/presentation/widgets/sections/skills_section.dart';
 import 'package:flutter/material.dart';

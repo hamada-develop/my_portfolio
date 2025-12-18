@@ -1,3 +1,4 @@
+import 'package:book/presentation/widgets/sections/cover_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,6 +8,11 @@ import '../../../../core/widgets/disappearing_navigation_bottom.dart';
 import '../../../../core/widgets/disappearing_navigation_rail.dart';
 import '../controller/home_cubit.dart';
 import '../widgets/home_content.dart';
+import '../widgets/sections/about_section.dart';
+import '../widgets/sections/contact_section.dart';
+import '../widgets/sections/projects_section.dart';
+import '../widgets/sections/skills_section.dart';
+import '../widgets/sections/work_history_section.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -139,7 +145,6 @@ class _HomeViewState extends State<HomeView>
 
 class HomeContent extends StatefulWidget {
   final ColorScheme colorScheme;
-
   const HomeContent({super.key, required this.colorScheme});
 
   @override
@@ -149,13 +154,10 @@ class HomeContent extends StatefulWidget {
 class _HomeContentState extends State<HomeContent> {
   late final ScrollController _controller;
 
-  // 1. Define Keys for all 5 sections
-  final GlobalKey _aboutKey = GlobalKey();
-  final GlobalKey _projectsKey = GlobalKey();
-  final GlobalKey _workHistoryKey = GlobalKey();
-  final GlobalKey _skillsKey = GlobalKey();
-  final GlobalKey _contactKey = GlobalKey();
+  // Global Keys for Scroll Targets
+  final _sectionKeys = List.generate(5, (index) => GlobalKey());
 
+  // Flag to break the feedback loop
   bool _isAutoScrolling = false;
 
   @override
@@ -172,59 +174,44 @@ class _HomeContentState extends State<HomeContent> {
     super.dispose();
   }
 
-  // 2. Updated Scroll Logic for 5 items
   void _onScroll() {
     if (_isAutoScrolling) return;
 
-    // Define the "snap point" (e.g., top 30% of screen)
-    final double threshold = MediaQuery.sizeOf(context).height * 0.3;
+    final threshold = MediaQuery.sizeOf(context).height * 0.4;
     final cubit = context.read<HomeCubit>();
 
-    // Helper to get Y position of a key
+    // Helper: Get Y position relative to viewport top
     double? getY(GlobalKey key) {
       final RenderBox? box = key.currentContext?.findRenderObject() as RenderBox?;
       return box?.localToGlobal(Offset.zero).dy;
     }
 
-    final aboutY = getY(_aboutKey);
-    final projectsY = getY(_projectsKey);
-    final workY = getY(_workHistoryKey);
-    final skillsY = getY(_skillsKey);
-    final contactY = getY(_contactKey);
-
-    // 3. Check Order: We determine the active section based on what is at the top.
-    // We check sequentially. If 'Contact' is near the top, it wins.
-    // NOTE: This simple logic assumes sections are tall enough.
-
+    // Check from bottom to top to see which section is "active"
     int newIndex = cubit.state.destination;
 
-    if (contactY != null && contactY <= threshold) {
-      newIndex = 4; // Contact
-    } else if (skillsY != null && skillsY <= threshold) {
-      newIndex = 3; // Skills
-    } else if (workY != null && workY <= threshold) {
-      newIndex = 2; // Work History
-    } else if (projectsY != null && projectsY <= threshold) {
-      newIndex = 1; // Projects
-    } else if (aboutY != null && aboutY <= threshold) {
-      newIndex = 0; // About
+    // We iterate backwards (4 down to 0)
+    for (int i = 4; i >= 0; i--) {
+      final y = getY(_sectionKeys[i]);
+      if (y != null && y <= threshold) {
+        newIndex = i;
+        break; // Found the active section
+      }
     }
 
-    // Only update if changed
     if (newIndex != cubit.state.destination) {
       cubit.changeDestination(newIndex);
     }
   }
 
-  Future<void> _scrollToSection(GlobalKey key) async {
-    final context = key.currentContext;
+  Future<void> _scrollToSection(int index) async {
+    final context = _sectionKeys[index].currentContext;
     if (context != null) {
       _isAutoScrolling = true;
       await Scrollable.ensureVisible(
         context,
-        duration: const Duration(milliseconds: 800),
+        duration: const Duration(milliseconds: 600),
         curve: Curves.easeInOut,
-        alignment: 0.0, // Align to top of screen
+        alignment: 0.0, // 0.0 = Align to top
       );
       _isAutoScrolling = false;
     }
@@ -234,16 +221,9 @@ class _HomeContentState extends State<HomeContent> {
   Widget build(BuildContext context) {
     return BlocListener<HomeCubit, HomeState>(
       listenWhen: (previous, current) => previous.destination != current.destination,
-      listener: (context, state) async {
+      listener: (context, state) {
         if (_controller.hasClients && !_isAutoScrolling) {
-          // 4. Map Index to Key
-          switch (state.destination) {
-            case 0: await _scrollToSection(_aboutKey); break;
-            case 1: await _scrollToSection(_projectsKey); break;
-            case 2: await _scrollToSection(_workHistoryKey); break;
-            case 3: await _scrollToSection(_skillsKey); break;
-            case 4: await _scrollToSection(_contactKey); break;
-          }
+          _scrollToSection(state.destination);
         }
       },
       child: Container(
@@ -252,17 +232,22 @@ class _HomeContentState extends State<HomeContent> {
           color: widget.colorScheme.surface,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
-        child: SingleChildScrollView(
-          controller: _controller,
-          padding: const EdgeInsets.only(bottom: 100), // Add padding for bottom scroll
-          child: Column(
-            children: [
-              _AboutWidget(key: _aboutKey),
-              _ProjectsWidget(key: _projectsKey),
-              _WorkHistoryWidget(key: _workHistoryKey),
-              _SkillsWidget(key: _skillsKey),
-              _ContactWidget(key: _contactKey),
-            ],
+        // ClipRect is useful here to respect the borderRadius
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          child: SingleChildScrollView(
+            controller: _controller,
+            // PADDING: Ensures the last item (Contact) can scroll to the top
+            padding: EdgeInsets.only(bottom: MediaQuery.sizeOf(context).height * 0.8),
+            child: Column(
+              children: [
+                AboutSection3(key: _sectionKeys[0]),
+                ProjectsSection2(key: _sectionKeys[1]),
+                WorkHistorySection2(key: _sectionKeys[2]), // Create this widget
+                SkillsSection2(key: _sectionKeys[3]),      // Create this widget
+                ContactSection2(key: _sectionKeys[4]),     // Create this widget
+              ],
+            ),
           ),
         ),
       ),
@@ -270,77 +255,5 @@ class _HomeContentState extends State<HomeContent> {
   }
 }
 
-
-class _AboutWidget extends StatelessWidget {
-  const _AboutWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.sizeOf(context).height,
-      width: double.infinity,
-      color: Colors.red,
-      child: Center(
-        child: Text('ABOUT WIDGET '),
-      ),
-    );
-  }
-}
-
-
-class _ProjectsWidget extends StatelessWidget {
-  const _ProjectsWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 1000,
-      width: double.infinity,
-      color: Colors.green,
-      child: Center(
-        child: Text('PROJECTS WIDGET '),
-      ),
-    );
-  }
-}
-
-class _WorkHistoryWidget extends StatelessWidget {
-  const _WorkHistoryWidget({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 800, // Placeholder height
-      width: double.infinity,
-      color: Colors.blueGrey[100],
-      child: const Center(child: Text('WORK HISTORY', style: TextStyle(fontSize: 30))),
-    );
-  }
-}
-
-class _SkillsWidget extends StatelessWidget {
-  const _SkillsWidget({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 600,
-      width: double.infinity,
-      color: Colors.orange[100],
-      child: const Center(child: Text('SKILLS', style: TextStyle(fontSize: 30))),
-    );
-  }
-}
-
-class _ContactWidget extends StatelessWidget {
-  const _ContactWidget({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 500,
-      width: double.infinity,
-      color: Colors.purple[100],
-      child: const Center(child: Text('CONTACT ME', style: TextStyle(fontSize: 30))),
-    );
-  }
-}
 
 
