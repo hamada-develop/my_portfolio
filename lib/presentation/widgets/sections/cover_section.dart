@@ -48,7 +48,7 @@ class _CoverSectionState extends State<CoverSection>
         PositionedDirectional(
           end: 0,
           child: Image.asset(
-            'assets/hamada.png',
+            'assets/hamada2.png',
             height: 1000,
             width: 700,
           ),

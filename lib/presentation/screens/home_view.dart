@@ -232,16 +232,14 @@ class _HomeContentState extends State<HomeContent> {
           color: widget.colorScheme.surface,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
-        // ClipRect is useful here to respect the borderRadius
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           child: SingleChildScrollView(
             controller: _controller,
-            // PADDING: Ensures the last item (Contact) can scroll to the top
             padding: EdgeInsets.only(bottom: MediaQuery.sizeOf(context).height * 0.8),
             child: Column(
               children: [
-                AboutSection3(key: _sectionKeys[0]),
+                AboutSection(key: _sectionKeys[0]),
                 ProjectsSection2(key: _sectionKeys[1]),
                 WorkHistorySection2(key: _sectionKeys[2]), // Create this widget
                 SkillsSection2(key: _sectionKeys[3]),      // Create this widget
