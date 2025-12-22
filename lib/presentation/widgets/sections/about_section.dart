@@ -45,30 +45,33 @@ class _AboutSectionState extends State<AboutSection>
   Widget build(BuildContext context) {
     final responsive = context.responsive;
     final screenHeight = MediaQuery.sizeOf(context).height;
+    print('CURRENT WIDTH ${responsive.width}');
 
     return Container(
-      // 1. تحديد الحد الأدنى للطول ليكون بحجم الشاشة
       constraints: BoxConstraints(minHeight: screenHeight),
       width: double.infinity,
       child: Stack(
-        // 2. محاذاة العناصر غير المثبتة (المحتوى) في المنتصف
         alignment: Alignment.center,
         children: [
-          // --- الخلفية (الصورة) ---
-          // نستخدم Positioned عادي لأننا لا نعتمد عليه في حساب الطول
           PositionedDirectional(
             end: 0,
-            top: 0, // ثبتنا الصورة في الأعلى
+            top: 0,
             child: Image.asset(
               'assets/hamada3.png',
-              height: 1000,
-              width: 700,
+              height: responsive.getValue(
+                mobile: screenHeight,
+                desktop: screenHeight,
+                tablet: screenHeight - 50,
+              ),
+              width: responsive.getValue(
+                mobile: 500,
+                desktop: 600,
+                tablet: 500,
+              ),
               fit: BoxFit.cover,
             ),
           ),
 
-          // --- طبقة التعتيم (Gradient) ---
-          // نستخدم Positioned.fill لتملأ المساحة التي سيحددها المحتوى والكونتينر
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -84,88 +87,119 @@ class _AboutSectionState extends State<AboutSection>
             ),
           ),
 
-          // --- المحتوى الأساسي (تم إزالة Positioned.fill منه) ---
-          // هذا هو "العمود الفقري" الذي سيحدد طول الـ Stack
           SectionContainer(
             padding: EdgeInsets.symmetric(
               horizontal: responsive.getValue(
                 mobile: AppConstants.spacingMd,
                 tablet: AppConstants.spacingXl,
-                desktop: AppConstants.spacing3xl,
+                desktop: AppConstants.spacingXl,
               ),
               vertical: responsive.getValue(
                 mobile: AppConstants.spacing3xl,
-                tablet: AppConstants.spacing4xl,
-                desktop: AppConstants.spacing4xl,
+                tablet: AppConstants.spacing3xl,
+                desktop: AppConstants.spacing3xl,
               ),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              // mainAxisSize: MainAxisSize.min, // لا نحتاجها هنا لأننا نريد التمدد الطبيعي
+              mainAxisAlignment: responsive.width <= 903
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.start,
               children: [
-
-                // Animated Flutter Icon
-                AnimatedBuilder(
-                  animation: _floatAnimation,
-                  builder: (context, child) {
-                    return Transform.translate(
-                      offset: Offset(0, _floatAnimation.value),
-                      child: Container(
-                        width: responsive.getValue(
-                          mobile: 100,
-                          tablet: 130,
-                          desktop: 160,
-                        ),
-                        height: responsive.getValue(
-                          mobile: 100,
-                          tablet: 130,
-                          desktop: 160,
-                        ),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: AppColors.primaryGradient,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.purpleShadow,
-                              blurRadius: 40,
-                              spreadRadius: 10,
+                Visibility(
+                  visible: responsive.width > 903,
+                  child: Padding(
+                    padding:  EdgeInsetsDirectional.only(end: responsive.width < 1330? 60: 0),
+                    child: AnimatedBuilder(
+                      animation: _floatAnimation,
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: Offset(0, _floatAnimation.value),
+                          child: Container(
+                            width: responsive.getValue(
+                              mobile: 100,
+                              tablet: 130,
+                              desktop: 160,
                             ),
-                          ],
-                        ),
-                        child: Icon(Icons.code,
-                            size: responsive.getValue(mobile: 50, tablet: 70, desktop: 80),
-                            color: Colors.white
-                        ),
-                      ),
-                    );
-                  },
+                            height: responsive.getValue(
+                              mobile: 100,
+                              tablet: 130,
+                              desktop: 160,
+                            ),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: AppColors.primaryGradient,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.purpleShadow,
+                                  blurRadius: 40,
+                                  spreadRadius: 10,
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.code,
+                              size: responsive.getValue(
+                                mobile: 50,
+                                tablet: 70,
+                                desktop: 80,
+                              ),
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
-
-                SizedBox(height: responsive.getValue(mobile: 24, tablet: 32, desktop: 40)),
+                SizedBox(
+                  height: responsive.getValue(
+                    mobile: 24,
+                    tablet: 32,
+                    desktop: responsive.width < 1330? 32: 40,
+                  ),
+                ),
 
                 // Greeting
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Hello! I Am ',
-                      style: AppTextStyles.heroAccent.copyWith(
-                        fontSize: responsive.getValue(mobile: 16, tablet: 18, desktop: 20),
+                Padding(
+                  padding: EdgeInsetsDirectional.only(
+                      end: responsive.width < 1330 && responsive.width > 903 ? 60 : 0),
+                  child: _GreetingElement(
+                    responsive: responsive,
+                    children: [
+                      Text(
+                        'Hello! I Am ',
+                        style: AppTextStyles.heroAccent.copyWith(
+                          fontSize: responsive.getValue(
+                            mobile: 16,
+                            tablet: 18,
+                            desktop: 20,
+                          ),
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    GradientText(
-                      text: AppConstants.name,
-                      gradient: AppColors.textGradient,
-                      style: AppTextStyles.heroAccent.copyWith(
-                        fontSize: responsive.getValue(mobile: 16, tablet: 18, desktop: 20),
+                      GradientText(
+                        text: AppConstants.name,
+                        gradient: AppColors.textGradient,
+                        style: AppTextStyles.heroAccent.copyWith(
+                          fontSize: responsive.getValue(
+                            mobile: 16,
+                            tablet: 18,
+                            desktop: 20,
+                          ),
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
 
-                SizedBox(height: responsive.getValue(mobile: 16, tablet: 24, desktop: 32)),
+                SizedBox(
+                  height: responsive.getValue(
+                    mobile: 16,
+                    tablet: 24,
+                    desktop: responsive.width < 1330? 24: 32,
+                  ),
+                ),
 
                 // Main Tagline
                 Column(
@@ -205,7 +239,13 @@ class _AboutSectionState extends State<AboutSection>
                   ],
                 ),
 
-                SizedBox(height: responsive.getValue(mobile: 40, tablet: 60, desktop: 80)),
+                SizedBox(
+                  height: responsive.getValue(
+                    mobile: 40,
+                    tablet: 60,
+                    desktop: responsive.width < 1330? 60: 80,
+                  ),
+                ),
 
                 // Title & Bio
                 Text(
@@ -221,7 +261,13 @@ class _AboutSectionState extends State<AboutSection>
                   textAlign: TextAlign.center,
                 ),
 
-                SizedBox(height: responsive.getValue(mobile: 16, tablet: 24, desktop: 32)),
+                SizedBox(
+                  height: responsive.getValue(
+                    mobile: 16,
+                    tablet: 24,
+                    desktop: 32,
+                  ),
+                ),
 
                 ConstrainedBox(
                   constraints: BoxConstraints(
@@ -251,5 +297,31 @@ class _AboutSectionState extends State<AboutSection>
         ],
       ),
     );
+  }
+}
+
+class _GreetingElement extends StatelessWidget {
+  final List<Widget> children;
+  final Responsive responsive;
+
+  const _GreetingElement({
+    super.key,
+    required this.children,
+    required this.responsive,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (responsive.width < 1330) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: children,
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: children,
+      );
+    }
   }
 }

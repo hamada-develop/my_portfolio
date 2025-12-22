@@ -66,6 +66,7 @@ class AppConstants {
   // Breakpoints
   static const double breakpointMobile = 600.0;
   static const double breakpointTablet = 1024.0;
+  // static const double breakpointTablet = 1100.0;
   static const double breakpointDesktop = 1280.0;
 
   // Animation Durations
