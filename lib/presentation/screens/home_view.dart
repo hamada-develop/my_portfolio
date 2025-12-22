@@ -1,4 +1,3 @@
-import 'package:book/presentation/widgets/sections/cover_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,7 +6,6 @@ import '../../../../core/widgets/animated_floating_action_button.dart';
 import '../../../../core/widgets/disappearing_navigation_bottom.dart';
 import '../../../../core/widgets/disappearing_navigation_rail.dart';
 import '../controller/home_cubit.dart';
-import '../widgets/home_content.dart';
 import '../widgets/sections/about_section.dart';
 import '../widgets/sections/contact_section.dart';
 import '../widgets/sections/projects_section.dart';
@@ -62,7 +60,7 @@ class _HomeViewState extends State<HomeView>
   }
 
   void _animateRailBasedOnWidth(double width) {
-    if (width > 600) {
+    if (width >= 600) {
       if (_controller.status != AnimationStatus.forward &&
           _controller.status != AnimationStatus.completed) {
         _controller.forward();

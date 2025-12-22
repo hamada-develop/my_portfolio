@@ -102,8 +102,8 @@ class _AboutSectionState extends State<AboutSection>
             ),
             child: Column(
               mainAxisAlignment: responsive.width <= 903
-                  ? MainAxisAlignment.center
-                  : MainAxisAlignment.start,
+                  ? .center
+                  : .start,
               children: [
                 Visibility(
                   visible: responsive.width > 903,
