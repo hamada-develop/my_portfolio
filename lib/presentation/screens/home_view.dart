@@ -109,9 +109,7 @@ class _HomeViewState extends State<HomeView>
                 ),
               ),
               Expanded(
-                child: RepaintBoundary(
-                  child: HomeContent(colorScheme: colorScheme),
-                ),
+                child: HomeContent(colorScheme: colorScheme),
               ),
             ],
           ),
@@ -232,18 +230,15 @@ class _HomeContentState extends State<HomeContent> {
         ),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
-          child: SingleChildScrollView(
+          child: CustomScrollView(
             controller: _controller,
-            padding: EdgeInsets.only(bottom: MediaQuery.sizeOf(context).height * 0.8),
-            child: Column(
-              children: [
-                AboutSection(key: _sectionKeys[0]),
-                ProjectsSection2(key: _sectionKeys[1]),
-                WorkHistorySection2(key: _sectionKeys[2]), // Create this widget
-                SkillsSection2(key: _sectionKeys[3]),      // Create this widget
-                ContactSection2(key: _sectionKeys[4]),     // Create this widget
-              ],
-            ),
+            slivers: [
+              SliverToBoxAdapter(child: AboutSection(key: _sectionKeys[0])),
+              SliverToBoxAdapter(child: ProjectsSection2(key: _sectionKeys[1])),
+              SliverToBoxAdapter(child: WorkHistorySection2(key: _sectionKeys[2])),
+              SliverToBoxAdapter(child: SkillsSection2(key: _sectionKeys[3])),
+              SliverToBoxAdapter(child: ContactSection2(key: _sectionKeys[4])),
+            ],
           ),
         ),
       ),

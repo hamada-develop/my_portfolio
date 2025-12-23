@@ -27,7 +27,7 @@ class SectionContainer extends StatelessWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: maxWidth ?? responsive.maxContentWidth,
-            maxHeight: responsive.height
+            minHeight: responsive.height,
           ),
           child: child,
         ),
@@ -61,10 +61,7 @@ class SectionWithTitle extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SectionTitle(
-            title: title,
-            subtitle: subtitle,
-          ),
+          SectionTitle(title: title, subtitle: subtitle),
           const SizedBox(height: AppConstants.spacing3xl),
           child,
         ],
@@ -108,9 +105,9 @@ class SectionTitle extends StatelessWidget {
           const SizedBox(height: AppConstants.spacingMd),
           Text(
             subtitle!,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: const Color(0xFF9CA3AF),
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: const Color(0xFF9CA3AF)),
             textAlign: textAlign ?? TextAlign.start,
           ),
         ],

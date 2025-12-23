@@ -19,6 +19,9 @@ class _AboutSectionState extends State<AboutSection>
   late AnimationController _controller;
   late Animation<double> _floatAnimation;
 
+  final color1 = Color(0xFF11071F).withOpacity(0.63);
+  final color2 = Color(0xFF11071F).withOpacity(0.95);
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +40,7 @@ class _AboutSectionState extends State<AboutSection>
 
   @override
   void dispose() {
+    _controller.stop();
     _controller.dispose();
     super.dispose();
   }
@@ -77,8 +81,8 @@ class _AboutSectionState extends State<AboutSection>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    const Color(0xFF11071F).withOpacity(0.63),
-                    const Color(0xFF11071F).withOpacity(0.95),
+                    color1,
+                    color2,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
