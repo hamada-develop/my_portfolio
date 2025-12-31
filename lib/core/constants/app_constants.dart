@@ -6,7 +6,6 @@ class AppConstants {
   static const String title = 'Senior Flutter Developer';
   static const String tagline = 'A Developer who Judges a book by its cover...';
   static const String taglineSubtext = 'Because if the cover doesn\'t impress you what else can?';
-
   static const String bio =
       'Senior Flutter Developer (5+ years) experienced in architecting and '
       'delivering cross-platform apps (iOS, Android, Web). Led Clean Architecture '

@@ -248,7 +248,7 @@ class _HomeContentState extends State<HomeContent> {
             slivers: [
               // Ensure these widgets actually assign the key to their root RenderObject!
               SliverToBoxAdapter(child: AboutSection(key: _sectionKeys[0])),
-              SliverToBoxAdapter(child: ProjectsSection2(key: _sectionKeys[1])),
+              SliverToBoxAdapter(child: ProjectsSection(key: _sectionKeys[1])),
               SliverToBoxAdapter(child: WorkHistorySection2(key: _sectionKeys[2])),
               SliverToBoxAdapter(child: SkillsSection2(key: _sectionKeys[3])),
               SliverToBoxAdapter(child: ContactSection2(key: _sectionKeys[4])),
