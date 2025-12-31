@@ -49,7 +49,6 @@ class _AboutSectionState extends State<AboutSection>
   Widget build(BuildContext context) {
     final responsive = context.responsive;
     final screenHeight = MediaQuery.sizeOf(context).height;
-    print('CURRENT WIDTH ${responsive.width}');
 
     return Container(
       constraints: BoxConstraints(minHeight: screenHeight),

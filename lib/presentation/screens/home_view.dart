@@ -28,7 +28,7 @@ class _HomeViewState extends State<HomeView>
   @override
   void initState() {
     super.initState();
-    _homeCubit = HomeCubit();
+    _homeCubit = context.read<HomeCubit>();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 350),
       reverseDuration: const Duration(milliseconds: 350),
@@ -76,62 +76,63 @@ class _HomeViewState extends State<HomeView>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return BlocProvider.value(
-      value: _homeCubit,
-      child: BlocListener<HomeCubit, HomeState>(
-        listenWhen: (previous, current) =>
-            previous.deviceWide != current.deviceWide,
-        listener: (context, state) {
-          // Animate rail based on device width changes
-          final width = MediaQuery.sizeOf(context).width;
-          _animateRailBasedOnWidth(width);
-        },
-        child: Scaffold(
-          backgroundColor: colorScheme.surfaceBright,
-          body: Row(
-            children: [
-              RepaintBoundary(
-                child: AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, child) {
-                    return BlocSelector<HomeCubit, HomeState, int>(
-                      selector: (state) => state.destination,
-                      builder: (context, destination) {
-                        return DisappearingNavigationRail(
-                          railAnimation: _railAnimation,
-                          selectedIndex: destination,
-                          backgroundColor: colorScheme.surfaceBright,
-                          onDestinationSelected: _homeCubit.changeDestination,
-                        );
-                      },
-                    );
-                  },
-                ),
+    return BlocListener<HomeCubit, HomeState>(
+      listenWhen: (previous, current) =>
+          previous.deviceWide != current.deviceWide,
+      listener: (context, state) {
+        // Animate rail based on device width changes
+        final width = MediaQuery.sizeOf(context).width;
+        _animateRailBasedOnWidth(width);
+      },
+      child: Scaffold(
+        backgroundColor: colorScheme.surfaceBright,
+        body: Row(
+          children: [
+            RepaintBoundary(
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) {
+                  return BlocSelector<HomeCubit, HomeState, int>(
+                    selector: (state) => state.destination,
+                    builder: (context, destination) {
+                      return DisappearingNavigationRail(
+                        railAnimation: _railAnimation,
+                        selectedIndex: destination,
+                        backgroundColor: colorScheme.surfaceBright,
+                        onDestinationSelected: _homeCubit.changeDestination,
+                      );
+                    },
+                  );
+                },
               ),
-              Expanded(
-                child: HomeContent(colorScheme: colorScheme),
-              ),
-            ],
-          ),
-          bottomNavigationBar: DisappearingNavigationBottom(
-            selectedIndex: 0,
-            onDestinationSelected: (index) {},
-            backgroundColor: colorScheme.surfaceBright,
-          ),
-          floatingActionButton: RepaintBoundary(
-            child: BlocSelector<HomeCubit, HomeState, DeviceWide>(
-              selector: (state) => state.deviceWide,
-              builder: (context, deviceWide) {
-                return Padding(
-                  padding: const EdgeInsetsDirectional.only(end: 20),
-                  child: AnimatedFAB(
-                    onPressed: () {},
-                    icon: Icons.download,
-                    isVisible: deviceWide == DeviceWide.small,
-                  ),
-                );
-              },
             ),
+            Expanded(
+              child: HomeContent(colorScheme: colorScheme),
+            ),
+          ],
+        ),
+        bottomNavigationBar: DisappearingNavigationBottom(
+          // Make sure to select the current index from state if your widget supports it,
+          // otherwise just the callback:
+          selectedIndex: context.select((HomeCubit cubit) => cubit.state.destination),
+          onDestinationSelected: (index) {
+            _homeCubit.changeDestination(index);
+          },
+          backgroundColor: colorScheme.surfaceBright,
+        ),
+        floatingActionButton: RepaintBoundary(
+          child: BlocSelector<HomeCubit, HomeState, DeviceWide>(
+            selector: (state) => state.deviceWide,
+            builder: (context, deviceWide) {
+              return Padding(
+                padding: const EdgeInsetsDirectional.only(end: 20),
+                child: AnimatedFAB(
+                  onPressed: () {},
+                  icon: Icons.download,
+                  isVisible: deviceWide == DeviceWide.small,
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -148,53 +149,56 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  late final ScrollController _controller;
-
-  // Global Keys for Scroll Targets
+  late final ScrollController _scrollController;
   final _sectionKeys = List.generate(5, (index) => GlobalKey());
 
-  // Flag to break the feedback loop
+  // Flag to prevent the scroll-spy from firing while we are animating to a section
   bool _isAutoScrolling = false;
+
+  // Flag to prevent the BlocListener from forcing a scroll when WE caused the state change manually
+  bool _isManuallyScrollingDetect = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
-    _controller.addListener(_onScroll);
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_onScroll);
-    _controller.dispose();
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
     super.dispose();
   }
 
   void _onScroll() {
+    // 1. If we are auto-scrolling (animation), don't try to detect sections
     if (_isAutoScrolling) return;
 
-    final threshold = MediaQuery.sizeOf(context).height * 0.4;
+    final threshold = MediaQuery.sizeOf(context).height * 0.4; // 40% of screen
     final cubit = context.read<HomeCubit>();
 
-    // Helper: Get Y position relative to viewport top
     double? getY(GlobalKey key) {
       final RenderBox? box = key.currentContext?.findRenderObject() as RenderBox?;
+      // If widget is not rendered, return null
       return box?.localToGlobal(Offset.zero).dy;
     }
 
-    // Check from bottom to top to see which section is "active"
     int newIndex = cubit.state.destination;
 
-    // We iterate backwards (4 down to 0)
+    // Iterate backwards to find the first section that has crossed the threshold
     for (int i = 4; i >= 0; i--) {
       final y = getY(_sectionKeys[i]);
       if (y != null && y <= threshold) {
         newIndex = i;
-        break; // Found the active section
+        break;
       }
     }
 
     if (newIndex != cubit.state.destination) {
+      // 2. Mark that this change is coming from a manual scroll
+      _isManuallyScrollingDetect = true;
       cubit.changeDestination(newIndex);
     }
   }
@@ -207,8 +211,11 @@ class _HomeContentState extends State<HomeContent> {
         context,
         duration: const Duration(milliseconds: 600),
         curve: Curves.easeInOut,
-        alignment: 0.0, // 0.0 = Align to top
+        // 3. Changed alignment to 0.0 (top) so the section snaps to the top of the screen
+        alignment: 0.0,
       );
+      // Small delay to ensure physics have settled
+      await Future.delayed(const Duration(milliseconds: 100));
       _isAutoScrolling = false;
     }
   }
@@ -218,7 +225,13 @@ class _HomeContentState extends State<HomeContent> {
     return BlocListener<HomeCubit, HomeState>(
       listenWhen: (previous, current) => previous.destination != current.destination,
       listener: (context, state) {
-        if (_controller.hasClients && !_isAutoScrolling) {
+        // 4. THE FIX: If this state change was caused by manual scrolling, ignore it.
+        if (_isManuallyScrollingDetect) {
+          _isManuallyScrollingDetect = false;
+          return;
+        }
+
+        if (_scrollController.hasClients && !_isAutoScrolling) {
           _scrollToSection(state.destination);
         }
       },
@@ -231,8 +244,9 @@ class _HomeContentState extends State<HomeContent> {
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           child: CustomScrollView(
-            controller: _controller,
+            controller: _scrollController,
             slivers: [
+              // Ensure these widgets actually assign the key to their root RenderObject!
               SliverToBoxAdapter(child: AboutSection(key: _sectionKeys[0])),
               SliverToBoxAdapter(child: ProjectsSection2(key: _sectionKeys[1])),
               SliverToBoxAdapter(child: WorkHistorySection2(key: _sectionKeys[2])),
