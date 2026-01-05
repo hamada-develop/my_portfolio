@@ -106,15 +106,15 @@ class _HomeViewState extends State<HomeView>
                 },
               ),
             ),
-            Expanded(
-              child: HomeContent(colorScheme: colorScheme),
-            ),
+            Expanded(child: HomeContent(colorScheme: colorScheme)),
           ],
         ),
         bottomNavigationBar: DisappearingNavigationBottom(
           // Make sure to select the current index from state if your widget supports it,
           // otherwise just the callback:
-          selectedIndex: context.select((HomeCubit cubit) => cubit.state.destination),
+          selectedIndex: context.select(
+            (HomeCubit cubit) => cubit.state.destination,
+          ),
           onDestinationSelected: (index) {
             _homeCubit.changeDestination(index);
           },
@@ -180,7 +180,8 @@ class _HomeContentState extends State<HomeContent> {
     final cubit = context.read<HomeCubit>();
 
     double? getY(GlobalKey key) {
-      final RenderBox? box = key.currentContext?.findRenderObject() as RenderBox?;
+      final RenderBox? box =
+          key.currentContext?.findRenderObject() as RenderBox?;
       // If widget is not rendered, return null
       return box?.localToGlobal(Offset.zero).dy;
     }
@@ -223,7 +224,8 @@ class _HomeContentState extends State<HomeContent> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<HomeCubit, HomeState>(
-      listenWhen: (previous, current) => previous.destination != current.destination,
+      listenWhen: (previous, current) =>
+          previous.destination != current.destination,
       listener: (context, state) {
         // 4. THE FIX: If this state change was caused by manual scrolling, ignore it.
         if (_isManuallyScrollingDetect) {
@@ -249,9 +251,11 @@ class _HomeContentState extends State<HomeContent> {
               // Ensure these widgets actually assign the key to their root RenderObject!
               SliverToBoxAdapter(child: AboutSection(key: _sectionKeys[0])),
               SliverToBoxAdapter(child: ProjectsSection(key: _sectionKeys[1])),
-              SliverToBoxAdapter(child: WorkHistorySection2(key: _sectionKeys[2])),
-              SliverToBoxAdapter(child: SkillsSection2(key: _sectionKeys[3])),
-              SliverToBoxAdapter(child: ContactSection2(key: _sectionKeys[4])),
+              SliverToBoxAdapter(
+                child: WorkHistorySection(key: _sectionKeys[2]),
+              ),
+              SliverToBoxAdapter(child: SkillsSection(key: _sectionKeys[3])),
+              SliverToBoxAdapter(child: ContactSection(key: _sectionKeys[4])),
             ],
           ),
         ),
@@ -259,6 +263,3 @@ class _HomeContentState extends State<HomeContent> {
     );
   }
 }
-
-
-

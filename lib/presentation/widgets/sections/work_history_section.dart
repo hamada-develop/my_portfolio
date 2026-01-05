@@ -1,103 +1,225 @@
 import 'package:flutter/material.dart';
+import '../../../data/repositories/portfolio_data.dart';
+import '../../../data/models/experience_model.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/utils/responsive.dart';
+import '../common/gradient_text.dart';
+import '../common/sections_container.dart';
+import '../common/glass_card.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
-
-class WorkHistorySection2 extends StatelessWidget {
-  const WorkHistorySection2({super.key});
+class WorkHistorySection extends StatelessWidget {
+  const WorkHistorySection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      width: double.infinity,
-      color: Colors.blueGrey.shade50, // Distinct background color
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Work History",
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 24),
+    final responsive = context.responsive;
+    final experiences = PortfolioData.experiences;
 
-          // List of Experience Cards
-          _buildExperienceCard(
-            context,
-            company: "Tech Solutions Inc.",
-            role: "Senior Flutter Developer",
-            duration: "2023 - Present",
-            description: "Led a team of 5 developers building a fintech super-app. Improved app performance by 40% using Isolates.",
+    return SectionContainer(
+      child: Column(
+        children: [
+          // Title
+          GradientText(
+            text: 'Work History',
+            gradient: AppColors.textGradient,
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              fontSize: responsive.getValue(
+                mobile: 28,
+                tablet: 32,
+                desktop: 36,
+              ),
+            ),
+            textAlign: TextAlign.center,
           ),
-          _buildExperienceCard(
-            context,
-            company: "Creative Studio",
-            role: "Mobile App Developer",
-            duration: "2021 - 2023",
-            description: "Developed and shipped 3 e-commerce apps for high-profile clients. Integrated payment gateways and complex animations.",
+
+          SizedBox(
+            height: responsive.getValue(
+              mobile: AppConstants.spacingXl,
+              tablet: AppConstants.spacingXxl,
+              desktop: AppConstants.spacing3xl,
+            ),
           ),
-          _buildExperienceCard(
-            context,
-            company: "Startup Hub",
-            role: "Junior Android Developer",
-            duration: "2018 - 2021",
-            description: "Started with Native Android (Java/Kotlin) before migrating legacy codebases to Flutter.",
+
+          // Experience List
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: experiences.length,
+            separatorBuilder: (context, index) =>
+                const SizedBox(height: AppConstants.spacingLg),
+            itemBuilder: (context, index) {
+              final experience = experiences[index];
+              return _ExperienceCard(experience: experience, index: index);
+            },
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildExperienceCard(
-      BuildContext context, {
-        required String company,
-        required String role,
-        required String duration,
-        required String description,
-      }) {
-    // Responsive Layout Check
-    final isWide = MediaQuery.sizeOf(context).width > 600;
+class _ExperienceCard extends StatelessWidget {
+  final ExperienceModel experience;
+  final int index;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
+  const _ExperienceCard({required this.experience, required this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    final responsive = context.responsive;
+
+    return GlassCard(
+          width: double.infinity,
+          padding: EdgeInsets.all(
+            responsive.getValue(
+              mobile: AppConstants.spacingMd,
+              tablet: AppConstants.spacingLg,
+              desktop: AppConstants.spacingXl,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Icon
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.radiusMd,
+                      ),
+                    ),
+                    child: Text(
+                      experience.icon,
+                      style: const TextStyle(fontSize: 24),
+                    ),
+                  ),
+                  const SizedBox(width: AppConstants.spacingMd),
+
+                  // Title and Company
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          experience.role,
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          experience.company,
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                color: AppColors.primaryBlue,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Period (Desktop)
+                  if (!responsive.isMobile)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerHigh.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.radiusFull,
+                        ),
+                      ),
+                      child: Text(
+                        experience.period,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+
+              // Period (Mobile)
+              if (responsive.isMobile) ...[
+                const SizedBox(height: AppConstants.spacingMd),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHigh.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.radiusFull,
+                    ),
+                  ),
                   child: Text(
-                    company,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
+                    experience.period,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ),
-                if (isWide) // Show duration on the right for desktop
-                  Text(duration, style: const TextStyle(fontWeight: FontWeight.w500)),
               ],
-            ),
-            if (!isWide) ...[ // Show duration below title for mobile
-              const SizedBox(height: 4),
-              Text(duration, style: TextStyle(color: Colors.grey[600])),
+
+              SizedBox(
+                height: responsive.getValue(
+                  mobile: AppConstants.spacingMd,
+                  tablet: AppConstants.spacingLg,
+                  desktop: AppConstants.spacingLg,
+                ),
+              ),
+
+              // Achievements
+              ...experience.achievements.map(
+                (achievement) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(top: 6),
+                        child: Icon(
+                          Icons.circle,
+                          size: 6,
+                          color: AppColors.accentCyan,
+                        ),
+                      ),
+                      const SizedBox(width: AppConstants.spacingSm),
+                      Expanded(
+                        child: Text(
+                          achievement,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: AppColors.textSecondary,
+                                height: 1.5,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
-            const SizedBox(height: 8),
-            Text(
-              role,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              description,
-              style: TextStyle(fontSize: 14, color: Colors.grey[800], height: 1.5),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        )
+        .animate()
+        .fadeIn(duration: 600.ms, delay: (100 * index).ms)
+        .slideX(begin: 0.1, end: 0, duration: 600.ms, delay: (100 * index).ms);
   }
 }
