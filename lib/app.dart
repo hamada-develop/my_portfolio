@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeCubit(),
       child: MaterialApp(
-        title: 'Portfolio',
+        title: 'hamadadev.com',
         theme: ThemeData(colorScheme: MaterialTheme.darkScheme()),
         debugShowCheckedModeBanner: false,
         home: HomeView(),
