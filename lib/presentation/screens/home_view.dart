@@ -158,6 +158,10 @@ class _HomeContentState extends State<HomeContent> {
   // Flag to prevent the BlocListener from forcing a scroll when WE caused the state change manually
   bool _isManuallyScrollingDetect = false;
 
+  // Debounce timer for scroll detection
+  int _lastScrollUpdate = 0;
+  static const _scrollDebounceMs = 50;
+
   @override
   void initState() {
     super.initState();
@@ -176,8 +180,30 @@ class _HomeContentState extends State<HomeContent> {
     // 1. If we are auto-scrolling (animation), don't try to detect sections
     if (_isAutoScrolling) return;
 
-    final threshold = MediaQuery.sizeOf(context).height * 0.4; // 40% of screen
+    // 2. Debounce: Prevent rapid updates during fast scrolling
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if (now - _lastScrollUpdate < _scrollDebounceMs) return;
+    _lastScrollUpdate = now;
+
     final cubit = context.read<HomeCubit>();
+    final screenHeight = MediaQuery.sizeOf(context).height;
+
+    // 3. Check if scrolled to bottom - select last section (Contact)
+    if (_scrollController.hasClients) {
+      final maxScroll = _scrollController.position.maxScrollExtent;
+      final currentScroll = _scrollController.position.pixels;
+      // If within 50 pixels of bottom, select last section
+      if (maxScroll - currentScroll < 50) {
+        if (cubit.state.destination != 4) {
+          _isManuallyScrollingDetect = true;
+          cubit.changeDestination(4);
+        }
+        return;
+      }
+    }
+
+    // 4. Use 25% threshold for earlier, more natural detection
+    final threshold = screenHeight * 0.25;
 
     double? getY(GlobalKey key) {
       final RenderBox? box =
@@ -198,7 +224,7 @@ class _HomeContentState extends State<HomeContent> {
     }
 
     if (newIndex != cubit.state.destination) {
-      // 2. Mark that this change is coming from a manual scroll
+      // 5. Mark that this change is coming from a manual scroll
       _isManuallyScrollingDetect = true;
       cubit.changeDestination(newIndex);
     }
@@ -212,7 +238,7 @@ class _HomeContentState extends State<HomeContent> {
         context,
         duration: const Duration(milliseconds: 600),
         curve: Curves.easeInOut,
-        // 3. Changed alignment to 0.0 (top) so the section snaps to the top of the screen
+        // Align section to top of screen
         alignment: 0.0,
       );
       // Small delay to ensure physics have settled

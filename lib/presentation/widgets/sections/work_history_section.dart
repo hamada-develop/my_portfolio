@@ -22,7 +22,7 @@ class WorkHistorySection extends StatelessWidget {
         children: [
           // Title
           GradientText(
-            text: 'Work History',
+            text: AppConstants.sectionTitleWorkHistory,
             gradient: AppColors.textGradient,
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
               fontSize: responsive.getValue(

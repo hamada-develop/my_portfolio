@@ -8,6 +8,7 @@ class SectionContainer extends StatelessWidget {
   final double? maxWidth;
   final Color? backgroundColor;
   final String? id;
+  final bool useMinHeight;
 
   const SectionContainer({
     super.key,
@@ -16,6 +17,7 @@ class SectionContainer extends StatelessWidget {
     this.maxWidth,
     this.backgroundColor,
     this.id,
+    this.useMinHeight = true,
   });
 
   @override
@@ -27,7 +29,7 @@ class SectionContainer extends StatelessWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: maxWidth ?? responsive.maxContentWidth,
-            minHeight: responsive.height,
+            minHeight: useMinHeight ? responsive.height : 0,
           ),
           child: child,
         ),

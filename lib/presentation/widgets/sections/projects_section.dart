@@ -23,7 +23,7 @@ class ProjectsSection extends StatelessWidget {
         children: [
           // Title
           GradientText(
-            text: 'Featured Projects',
+            text: AppConstants.sectionTitleProjects,
             gradient: AppColors.textGradient,
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
               fontSize: responsive.getValue(

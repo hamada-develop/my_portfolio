@@ -23,11 +23,12 @@ class ContactSection extends StatelessWidget {
     final responsive = context.responsive;
 
     return SectionContainer(
+      useMinHeight: false,
       child: Column(
         children: [
           // Title
           GradientText(
-            text: 'Get In Touch',
+            text: AppConstants.sectionTitleContact,
             gradient: AppColors.textGradient,
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
               fontSize: responsive.getValue(
@@ -59,7 +60,7 @@ class ContactSection extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      "I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.",
+                      AppConstants.contactMessage,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: AppColors.textSecondary,
                         height: 1.6,
@@ -81,21 +82,21 @@ class ContactSection extends StatelessWidget {
                       children: [
                         _ContactItem(
                           icon: Icons.email_outlined,
-                          label: 'Email',
+                          label: AppConstants.contactEmailLabel,
                           value: AppConstants.email,
                           onTap: () =>
                               _launchUrl('mailto:${AppConstants.email}'),
                         ),
                         _ContactItem(
                           icon: Icons.link,
-                          label: 'LinkedIn',
-                          value: 'hamada-develop',
+                          label: AppConstants.contactLinkedInLabel,
+                          value: AppConstants.linkedInHandle,
                           onTap: () => _launchUrl(AppConstants.linkedInUrl),
                         ),
                         _ContactItem(
                           icon: Icons.code,
-                          label: 'GitHub',
-                          value: 'hamada-develop',
+                          label: AppConstants.contactGithubLabel,
+                          value: AppConstants.githubHandle,
                           onTap: () => _launchUrl(AppConstants.githubUrl),
                         ),
                       ],
@@ -119,7 +120,7 @@ class ContactSection extends StatelessWidget {
           const Divider(color: AppColors.glassBorder),
           const SizedBox(height: AppConstants.spacingLg),
           Text(
-            'Made with Flutter 💙 by ${AppConstants.name}',
+            '${AppConstants.footerMadeWith} ${AppConstants.name}',
             style: Theme.of(
               context,
             ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
@@ -127,7 +128,7 @@ class ContactSection extends StatelessWidget {
           ),
           const SizedBox(height: AppConstants.spacingSm),
           Text(
-            '© ${DateTime.now().year} All Rights Reserved',
+            '© ${DateTime.now().year} ${AppConstants.footerCopyright}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: AppColors.textSecondary.withOpacity(0.7),
             ),

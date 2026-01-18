@@ -22,7 +22,7 @@ class SkillsSection extends StatelessWidget {
         children: [
           // Title
           GradientText(
-            text: 'Technical Skills',
+            text: AppConstants.sectionTitleSkills,
             gradient: AppColors.textGradient,
             style: Theme.of(context).textTheme.displaySmall?.copyWith(
               fontSize: responsive.getValue(
