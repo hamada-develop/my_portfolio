@@ -49,7 +49,6 @@ class AppConstants {
 
   // Assets
   static const String avatarPrimary = 'assets/hamada.png';
-  static const String avatarSecondary = 'assets/hamada3.png';
 
   // Tooltips
   static const String tooltipAppStore = 'App Store';
