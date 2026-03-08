@@ -12,6 +12,7 @@ import '../widgets/sections/contact_section.dart';
 import '../widgets/sections/projects_section.dart';
 import '../widgets/sections/skills_section.dart';
 import '../widgets/sections/work_history_section.dart';
+import '../../../../core/constants/app_constants.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -39,7 +40,7 @@ class _HomeViewState extends State<HomeView>
 
     // Initialize controller value based on initial screen size
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      precacheImage(const AssetImage('assets/hamada.png'), context);
+      precacheImage(AssetImage(AppConstants.avatarPrimary), context);
       final width = MediaQuery.sizeOf(context).width;
       _controller.value = width > 600 ? 1 : 0;
       _homeCubit.updateDeviceWidth(width);
@@ -116,7 +117,7 @@ class _HomeViewState extends State<HomeView>
               child: CornerBanner(
                 bannerPosition: CornerBannerPosition.topRight,
                 bannerColor: Colors.red,
-                child: Text('Under Development'),
+                child: Text(AppConstants.bannerUnderDevelopment),
               ),
             ),
           ],

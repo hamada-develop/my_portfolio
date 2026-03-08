@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
-import 'app_text_styles.dart';
 
 class AppTheme {
   AppTheme._();
-
 
   // Custom BoxDecoration for glass effect
   static BoxDecoration glassDecoration({
@@ -19,25 +17,25 @@ class AppTheme {
       borderRadius: borderRadius ?? BorderRadius.circular(16),
       border: Border.all(
         color: isHovered
-            ? AppColors.glassBorder.withOpacity(0.8)
+            ? AppColors.glassBorder.withValues(alpha: 0.8)
             : AppColors.glassBorder,
         width: 1,
       ),
       gradient: gradientColors != null
           ? LinearGradient(
-        colors: gradientColors,
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      )
+              colors: gradientColors,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )
           : null,
       boxShadow: isHovered
           ? [
-        BoxShadow(
-          color: AppColors.purpleShadow,
-          blurRadius: 24,
-          offset: const Offset(0, 8),
-        ),
-      ]
+              BoxShadow(
+                color: AppColors.purpleShadow,
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ]
           : null,
     );
   }

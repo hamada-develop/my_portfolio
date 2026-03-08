@@ -89,7 +89,7 @@ class _ExperienceCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryBlue.withOpacity(0.1),
+                      color: AppColors.primaryBlue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(
                         AppConstants.radiusMd,
                       ),
@@ -137,7 +137,7 @@ class _ExperienceCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Theme.of(
                           context,
-                        ).colorScheme.surfaceContainerHigh.withOpacity(0.5),
+                        ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(
                           AppConstants.radiusFull,
                         ),
@@ -163,7 +163,7 @@ class _ExperienceCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Theme.of(
                       context,
-                    ).colorScheme.surfaceContainerHigh.withOpacity(0.5),
+                    ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(
                       AppConstants.radiusFull,
                     ),

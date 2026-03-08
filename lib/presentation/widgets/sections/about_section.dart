@@ -20,8 +20,8 @@ class _AboutSectionState extends State<AboutSection>
   late AnimationController _controller;
   late Animation<double> _floatAnimation;
 
-  final color1 = Color(0xFF11071F).withOpacity(0.63);
-  final color2 = Color(0xFF11071F).withOpacity(0.95);
+  final color1 = AppColors.glassOverlayDark.withValues(alpha: 0.63);
+  final color2 = AppColors.glassOverlayDark.withValues(alpha: 0.95);
 
   @override
   void initState() {
@@ -61,48 +61,50 @@ class _AboutSectionState extends State<AboutSection>
           PositionedDirectional(
             end: 0,
             top: 0,
-            child: Image.asset(
-              'assets/hamada3.png',
-              height: responsive.getValue(
-                mobile: screenHeight,
-                desktop: screenHeight,
-                tablet: screenHeight - 50,
-              ),
-              width: responsive.getValue(
-                mobile: 500,
-                desktop: 600,
-                tablet: 500,
-              ),
-              fit: BoxFit.cover,
-            )
-                .animate()
-                .fadeIn(duration: 800.ms, curve: Curves.easeOut)
-                .scale(
-              begin: const Offset(1.1, 1.1),
-              end: const Offset(1.0, 1.0),
-              duration: 1200.ms,
-              curve: Curves.easeOutCubic,
-            ),
+            child:
+                Image.asset(
+                      AppConstants.avatarSecondary,
+                      height: responsive.getValue(
+                        mobile: screenHeight,
+                        desktop: screenHeight,
+                        tablet: screenHeight - 50,
+                      ),
+                      width: responsive.getValue(
+                        mobile: 500,
+                        desktop: 600,
+                        tablet: 500,
+                      ),
+                      fit: BoxFit.cover,
+                    )
+                    .animate()
+                    .fadeIn(duration: 800.ms, curve: Curves.easeOut)
+                    .scale(
+                      begin: const Offset(1.1, 1.1),
+                      end: const Offset(1.0, 1.0),
+                      duration: 1200.ms,
+                      curve: Curves.easeOutCubic,
+                    ),
           ),
 
           // Animated Gradient Overlay
           Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [color1, color2],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            )
-                .animate()
-                .fadeIn(duration: 600.ms)
-                .shimmer(
-              duration: 2000.ms,
-              delay: 800.ms,
-              color: AppColors.primaryPink.withOpacity(0.3),
-            ),
+            child:
+                Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [color1, color2],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
+                    )
+                    .animate()
+                    .fadeIn(duration: 600.ms)
+                    .shimmer(
+                      duration: 2000.ms,
+                      delay: 800.ms,
+                      color: AppColors.primaryPink.withValues(alpha: 0.3),
+                    ),
           ),
 
           SectionContainer(
@@ -128,54 +130,55 @@ class _AboutSectionState extends State<AboutSection>
                     padding: EdgeInsetsDirectional.only(
                       end: responsive.width < 1330 ? 60 : 0,
                     ),
-                    child: AnimatedBuilder(
-                      animation: _floatAnimation,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(0, _floatAnimation.value),
-                          child: Container(
-                            width: responsive.getValue(
-                              mobile: 100,
-                              tablet: 130,
-                              desktop: 160,
+                    child:
+                        AnimatedBuilder(
+                              animation: _floatAnimation,
+                              builder: (context, child) {
+                                return Transform.translate(
+                                  offset: Offset(0, _floatAnimation.value),
+                                  child: Container(
+                                    width: responsive.getValue(
+                                      mobile: 100,
+                                      tablet: 130,
+                                      desktop: 160,
+                                    ),
+                                    height: responsive.getValue(
+                                      mobile: 100,
+                                      tablet: 130,
+                                      desktop: 160,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: AppColors.primaryGradient,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: AppColors.purpleShadow,
+                                          blurRadius: 40,
+                                          spreadRadius: 10,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Icon(
+                                      Icons.code,
+                                      size: responsive.getValue(
+                                        mobile: 50,
+                                        tablet: 70,
+                                        desktop: 80,
+                                      ),
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                            .animate()
+                            .fadeIn(duration: 600.ms, delay: 200.ms)
+                            .scale(
+                              begin: const Offset(0.5, 0.5),
+                              duration: 800.ms,
+                              delay: 200.ms,
+                              curve: Curves.elasticOut,
                             ),
-                            height: responsive.getValue(
-                              mobile: 100,
-                              tablet: 130,
-                              desktop: 160,
-                            ),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: AppColors.primaryGradient,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.purpleShadow,
-                                  blurRadius: 40,
-                                  spreadRadius: 10,
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              Icons.code,
-                              size: responsive.getValue(
-                                mobile: 50,
-                                tablet: 70,
-                                desktop: 80,
-                              ),
-                              color: Colors.white,
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                        .animate()
-                        .fadeIn(duration: 600.ms, delay: 200.ms)
-                        .scale(
-                      begin: const Offset(0.5, 0.5),
-                      duration: 800.ms,
-                      delay: 200.ms,
-                      curve: Curves.elasticOut,
-                    ),
                   ),
                 ),
                 SizedBox(
@@ -197,51 +200,51 @@ class _AboutSectionState extends State<AboutSection>
                     responsive: responsive,
                     children: [
                       Text(
-                        'Hello! I Am ',
-                        style: AppTextStyles.heroAccent.copyWith(
-                          fontSize: responsive.getValue(
-                            mobile: 16,
-                            tablet: 18,
-                            desktop: 20,
-                          ),
-                        ),
-                        textAlign: TextAlign.center,
-                      )
+                            AppConstants.greetingPrefix,
+                            style: AppTextStyles.heroAccent.copyWith(
+                              fontSize: responsive.getValue(
+                                mobile: 16,
+                                tablet: 18,
+                                desktop: 20,
+                              ),
+                            ),
+                            textAlign: TextAlign.center,
+                          )
                           .animate()
                           .fadeIn(duration: 600.ms, delay: 400.ms)
                           .slideY(
-                        begin: -0.3,
-                        end: 0,
-                        duration: 600.ms,
-                        delay: 400.ms,
-                        curve: Curves.easeOutCubic,
-                      ),
-                      GradientText(
-                        text: AppConstants.name,
-                        gradient: AppColors.textGradient,
-                        style: AppTextStyles.heroAccent.copyWith(
-                          fontSize: responsive.getValue(
-                            mobile: 16,
-                            tablet: 18,
-                            desktop: 20,
+                            begin: -0.3,
+                            end: 0,
+                            duration: 600.ms,
+                            delay: 400.ms,
+                            curve: Curves.easeOutCubic,
                           ),
-                        ),
-                        textAlign: TextAlign.center,
-                      )
+                      GradientText(
+                            text: AppConstants.name,
+                            gradient: AppColors.textGradient,
+                            style: AppTextStyles.heroAccent.copyWith(
+                              fontSize: responsive.getValue(
+                                mobile: 16,
+                                tablet: 18,
+                                desktop: 20,
+                              ),
+                            ),
+                            textAlign: TextAlign.center,
+                          )
                           .animate()
                           .fadeIn(duration: 600.ms, delay: 600.ms)
                           .slideY(
-                        begin: -0.3,
-                        end: 0,
-                        duration: 600.ms,
-                        delay: 600.ms,
-                        curve: Curves.easeOutCubic,
-                      )
+                            begin: -0.3,
+                            end: 0,
+                            duration: 600.ms,
+                            delay: 600.ms,
+                            curve: Curves.easeOutCubic,
+                          )
                           .shimmer(
-                        duration: 1500.ms,
-                        delay: 1200.ms,
-                        color: Colors.white.withOpacity(0.5),
-                      ),
+                            duration: 1500.ms,
+                            delay: 1200.ms,
+                            color: Colors.white.withValues(alpha: 0.5),
+                          ),
                     ],
                   ),
                 ),
@@ -258,79 +261,88 @@ class _AboutSectionState extends State<AboutSection>
                 Column(
                   children: [
                     Text(
-                      'A Developer who',
-                      style: AppTextStyles.heroTitleResponsive(context),
-                      textAlign: TextAlign.center,
-                    )
+                          AppConstants.heroLine1,
+                          style: AppTextStyles.heroTitleResponsive(context),
+                          textAlign: TextAlign.center,
+                        )
                         .animate()
                         .fadeIn(duration: 700.ms, delay: 800.ms)
                         .slideX(
-                      begin: -0.2,
-                      end: 0,
-                      duration: 700.ms,
-                      delay: 800.ms,
-                      curve: Curves.easeOutCubic,
-                    ),
+                          begin: -0.2,
+                          end: 0,
+                          duration: 700.ms,
+                          delay: 800.ms,
+                          curve: Curves.easeOutCubic,
+                        ),
                     GradientText(
-                      text: 'Judges a book',
-                      gradient: AppColors.purplePinkGradient,
-                      style: AppTextStyles.heroTitleResponsive(context),
-                      textAlign: TextAlign.center,
-                    )
+                          text: AppConstants.heroLine2,
+                          gradient: AppColors.purplePinkGradient,
+                          style: AppTextStyles.heroTitleResponsive(context),
+                          textAlign: TextAlign.center,
+                        )
                         .animate()
                         .fadeIn(duration: 700.ms, delay: 1100.ms)
                         .slideX(
-                      begin: 0.2,
-                      end: 0,
-                      duration: 700.ms,
-                      delay: 1100.ms,
-                      curve: Curves.easeOutCubic,
-                    )
+                          begin: 0.2,
+                          end: 0,
+                          duration: 700.ms,
+                          delay: 1100.ms,
+                          curve: Curves.easeOutCubic,
+                        )
                         .shimmer(
-                      duration: 10000.ms,
-                      delay: 1800.ms,
-                      color: Colors.white.withOpacity(0.4),
-                    ),
+                          duration: 10000.ms,
+                          delay: 1800.ms,
+                          color: Colors.white.withValues(alpha: 0.4),
+                        ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'by its ',
-                          style: AppTextStyles.heroTitleResponsive(context),
-                          textAlign: TextAlign.center,
-                        ),
-                        GradientText(
-                          text: 'cover',
-                          gradient: AppColors.cyanGradient,
-                          style: AppTextStyles.heroTitleResponsive(context),
-                          textAlign: TextAlign.center,
-                        )
-                            .animate()
-                            .scale(
-                          begin: const Offset(0.8, 0.8),
-                          duration: 600.ms,
-                          delay: 1600.ms,
-                          curve: Curves.elasticOut,
-                        )
-                            .shimmer(
-                          duration: 10000.ms,
-                          delay: 2200.ms,
-                          color: Colors.white.withOpacity(0.5),
-                        ),
-                        Text(
-                          '...',
-                          style: AppTextStyles.heroTitleResponsive(context),
-                          textAlign: TextAlign.center,
-                        ),
-                      ]
-                          .animate(interval: 200.ms)
-                          .fadeIn(duration: 700.ms, delay: 1400.ms)
-                          .slideY(
-                        begin: 0.3,
-                        end: 0,
-                        duration: 700.ms,
-                        curve: Curves.easeOutCubic,
-                      ),
+                      children:
+                          [
+                                Text(
+                                  AppConstants.heroLine3Prefix,
+                                  style: AppTextStyles.heroTitleResponsive(
+                                    context,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                GradientText(
+                                      text: AppConstants.heroLine3Highlight,
+                                      gradient: AppColors.cyanGradient,
+                                      style: AppTextStyles.heroTitleResponsive(
+                                        context,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )
+                                    .animate()
+                                    .scale(
+                                      begin: const Offset(0.8, 0.8),
+                                      duration: 600.ms,
+                                      delay: 1600.ms,
+                                      curve: Curves.elasticOut,
+                                    )
+                                    .shimmer(
+                                      duration: 10000.ms,
+                                      delay: 2200.ms,
+                                      color: Colors.white.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                    ),
+                                Text(
+                                  AppConstants.heroLine3Suffix,
+                                  style: AppTextStyles.heroTitleResponsive(
+                                    context,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ]
+                              .animate(interval: 200.ms)
+                              .fadeIn(duration: 700.ms, delay: 1400.ms)
+                              .slideY(
+                                begin: 0.3,
+                                end: 0,
+                                duration: 700.ms,
+                                curve: Curves.easeOutCubic,
+                              ),
                     ),
                   ],
                 ),
@@ -345,32 +357,32 @@ class _AboutSectionState extends State<AboutSection>
 
                 // Title with Blur Effect
                 Text(
-                  'I\'m a ${AppConstants.title}.',
-                  style: AppTextStyles.h3.copyWith(
-                    fontSize: responsive.getValue(
-                      mobile: 20,
-                      tablet: 24,
-                      desktop: 28,
-                    ),
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                )
+                      'I\'m a ${AppConstants.title}.',
+                      style: AppTextStyles.h3.copyWith(
+                        fontSize: responsive.getValue(
+                          mobile: 20,
+                          tablet: 24,
+                          desktop: 28,
+                        ),
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    )
                     .animate()
                     .fadeIn(duration: 800.ms, delay: 1800.ms)
                     .blur(
-                  begin: const Offset(4, 4),
-                  end: const Offset(0, 0),
-                  duration: 800.ms,
-                  delay: 1800.ms,
-                )
+                      begin: const Offset(4, 4),
+                      end: const Offset(0, 0),
+                      duration: 800.ms,
+                      delay: 1800.ms,
+                    )
                     .slideY(
-                  begin: 0.2,
-                  end: 0,
-                  duration: 800.ms,
-                  delay: 1800.ms,
-                  curve: Curves.easeOutCubic,
-                ),
+                      begin: 0.2,
+                      end: 0,
+                      duration: 800.ms,
+                      delay: 1800.ms,
+                      curve: Curves.easeOutCubic,
+                    ),
 
                 SizedBox(
                   height: responsive.getValue(
@@ -389,34 +401,35 @@ class _AboutSectionState extends State<AboutSection>
                       desktop: 800,
                     ),
                   ),
-                  child: Text(
-                    AppConstants.bio,
-                    style: AppTextStyles.bodyLarge.copyWith(
-                      fontSize: responsive.getValue(
-                        mobile: 14,
-                        tablet: 16,
-                        desktop: 18,
-                      ),
-                      height: 1.8,
-                      color: Colors.white70,
-                    ),
-                    textAlign: TextAlign.center,
-                  )
-                      .animate()
-                      .fadeIn(duration: 1000.ms, delay: 2200.ms)
-                      .slideY(
-                    begin: 0.3,
-                    end: 0,
-                    duration: 1000.ms,
-                    delay: 2200.ms,
-                    curve: Curves.easeOutCubic,
-                  )
-                      .blur(
-                    begin: const Offset(2, 2),
-                    end: const Offset(0, 0),
-                    duration: 1000.ms,
-                    delay: 2200.ms,
-                  ),
+                  child:
+                      Text(
+                            AppConstants.bio,
+                            style: AppTextStyles.bodyLarge.copyWith(
+                              fontSize: responsive.getValue(
+                                mobile: 14,
+                                tablet: 16,
+                                desktop: 18,
+                              ),
+                              height: 1.8,
+                              color: Colors.white70,
+                            ),
+                            textAlign: TextAlign.center,
+                          )
+                          .animate()
+                          .fadeIn(duration: 1000.ms, delay: 2200.ms)
+                          .slideY(
+                            begin: 0.3,
+                            end: 0,
+                            duration: 1000.ms,
+                            delay: 2200.ms,
+                            curve: Curves.easeOutCubic,
+                          )
+                          .blur(
+                            begin: const Offset(2, 2),
+                            end: const Offset(0, 0),
+                            duration: 1000.ms,
+                            delay: 2200.ms,
+                          ),
                 ),
               ],
             ),
@@ -431,11 +444,7 @@ class _GreetingElement extends StatelessWidget {
   final List<Widget> children;
   final Responsive responsive;
 
-  const _GreetingElement({
-    super.key,
-    required this.children,
-    required this.responsive,
-  });
+  const _GreetingElement({required this.children, required this.responsive});
 
   @override
   Widget build(BuildContext context) {

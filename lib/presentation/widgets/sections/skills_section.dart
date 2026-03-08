@@ -89,7 +89,7 @@ class _SkillCategoryCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryPurple.withOpacity(0.1),
+                      color: AppColors.primaryPurple.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(
                         AppConstants.radiusMd,
                       ),
@@ -127,7 +127,7 @@ class _SkillCategoryCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Theme.of(
                         context,
-                      ).colorScheme.surfaceContainerHigh.withOpacity(0.5),
+                      ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(
                         AppConstants.radiusFull,
                       ),
