@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/responsive.dart';
 
 class SectionContainer extends StatelessWidget {
@@ -95,7 +96,7 @@ class SectionTitle extends StatelessWidget {
         ShaderMask(
           blendMode: BlendMode.srcIn,
           shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFFA78BFA), Color(0xFF22D3EE)],
+            colors: [AppColors.accentPurpleLight, AppColors.accentCyan],
           ).createShader(bounds),
           child: Text(
             title,
@@ -109,7 +110,7 @@ class SectionTitle extends StatelessWidget {
             subtitle!,
             style: Theme.of(
               context,
-            ).textTheme.bodyLarge?.copyWith(color: const Color(0xFF9CA3AF)),
+            ).textTheme.bodyLarge?.copyWith(color: AppColors.textTertiary),
             textAlign: textAlign ?? TextAlign.start,
           ),
         ],

@@ -4,9 +4,7 @@ class AppColors {
   AppColors._();
 
   // Background Colors
-  static const Color backgroundDark = Color(0xFF0F0A1E);
   static const Color backgroundDeep = Color(0xFF1A0B2E);
-  static const Color backgroundPurple = Color(0xFF2D1B4E);
 
   // Primary Colors
   static const Color primaryPurple = Color(0xFF8B5CF6);
@@ -17,18 +15,17 @@ class AppColors {
   // Accent Colors
   static const Color accentPurpleLight = Color(0xFFA78BFA);
   static const Color accentCyan = Color(0xFF22D3EE);
-  static const Color accentBlue = Color(0xFF60A5FA);
 
   // Text Colors
   static const Color textPrimary = Color(0xFFFFFFFF);
   static const Color textSecondary = Color(0xFFD1D5DB);
   static const Color textTertiary = Color(0xFF9CA3AF);
-  static const Color textMuted = Color(0xFF6B7280);
 
   // Glass Effect Colors
   static const Color glassBorder = Color(0x33A78BFA);
   static const Color glassBackground = Color(0x0DFFFFFF);
   static const Color glassBackgroundHover = Color(0x1AFFFFFF);
+  static const Color glassOverlayDark = Color(0xFF11071F);
 
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
@@ -51,16 +48,6 @@ class AppColors {
 
   static const LinearGradient textGradient = LinearGradient(
     colors: [accentPurpleLight, primaryCyan],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static const LinearGradient backgroundGradient = LinearGradient(
-    colors: [
-      Color(0xFF1E1B4B), // Indigo-950
-      Color(0xFF4C1D95), // Purple-950
-      Color(0xFF0F172A), // Slate-900
-    ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -92,5 +79,4 @@ class AppColors {
 
   // Shadow Colors
   static const Color purpleShadow = Color(0x4D8B5CF6);
-  static const Color blueShadow = Color(0x4D3B82F6);
 }

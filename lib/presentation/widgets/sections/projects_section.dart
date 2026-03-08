@@ -205,7 +205,9 @@ class _ProjectCard extends StatelessWidget {
                                 AppConstants.radiusSm,
                               ),
                               border: Border.all(
-                                color: AppColors.glassBorder.withValues(alpha: 0.5),
+                                color: AppColors.glassBorder.withValues(
+                                  alpha: 0.5,
+                                ),
                               ),
                             ),
                             child: Text(
@@ -239,7 +241,7 @@ class _ProjectCard extends StatelessWidget {
                       IconButton(
                         onPressed: () => _launchUrl(project.links.appStore!),
                         icon: const Icon(Icons.apple),
-                        tooltip: 'App Store',
+                        tooltip: AppConstants.tooltipAppStore,
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white.withValues(alpha: 0.1),
                         ),
@@ -249,7 +251,7 @@ class _ProjectCard extends StatelessWidget {
                       IconButton(
                         onPressed: () => _launchUrl(project.links.playStore!),
                         icon: const Icon(Icons.android),
-                        tooltip: 'Play Store',
+                        tooltip: AppConstants.tooltipPlayStore,
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white.withValues(alpha: 0.1),
                         ),
@@ -259,7 +261,7 @@ class _ProjectCard extends StatelessWidget {
                       IconButton(
                         onPressed: () => _launchUrl(project.links.web!),
                         icon: const Icon(Icons.language),
-                        tooltip: 'Website',
+                        tooltip: AppConstants.tooltipWebsite,
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white.withValues(alpha: 0.1),
                         ),
