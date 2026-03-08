@@ -81,7 +81,6 @@ class _HomeViewState extends State<HomeView>
       listenWhen: (previous, current) =>
           previous.deviceWide != current.deviceWide,
       listener: (context, state) {
-        // Animate rail based on device width changes
         final width = MediaQuery.sizeOf(context).width;
         _animateRailBasedOnWidth(width);
       },

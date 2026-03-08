@@ -2,7 +2,7 @@ name: Deploy Flutter Web to GitHub Pages
 
 on:
   push:
-    branches: [ antigr ]
+    branches: [ main ]
 
 permissions:
   contents: write
@@ -17,7 +17,6 @@ jobs:
         with:
           channel: stable
 
-      - run: flutter clean
 
       - run: flutter pub get
 
