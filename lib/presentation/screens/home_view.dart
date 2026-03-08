@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:super_banners/super_banners.dart';
 
 import '../../../../core/animations.dart';
 import '../../../../core/widgets/animated_floating_action_button.dart';
@@ -86,27 +87,39 @@ class _HomeViewState extends State<HomeView>
       },
       child: Scaffold(
         backgroundColor: colorScheme.surfaceBright,
-        body: Row(
+        body: Stack(
           children: [
-            RepaintBoundary(
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) {
-                  return BlocSelector<HomeCubit, HomeState, int>(
-                    selector: (state) => state.destination,
-                    builder: (context, destination) {
-                      return DisappearingNavigationRail(
-                        railAnimation: _railAnimation,
-                        selectedIndex: destination,
-                        backgroundColor: colorScheme.surfaceBright,
-                        onDestinationSelected: _homeCubit.changeDestination,
+            Row(
+              children: [
+                RepaintBoundary(
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (context, child) {
+                      return BlocSelector<HomeCubit, HomeState, int>(
+                        selector: (state) => state.destination,
+                        builder: (context, destination) {
+                          return DisappearingNavigationRail(
+                            railAnimation: _railAnimation,
+                            selectedIndex: destination,
+                            backgroundColor: colorScheme.surfaceBright,
+                            onDestinationSelected: _homeCubit.changeDestination,
+                          );
+                        },
                       );
                     },
-                  );
-                },
+                  ),
+                ),
+                Expanded(child: HomeContent(colorScheme: colorScheme)),
+              ],
+            ),
+            PositionedDirectional(
+              end: 0,
+              child: CornerBanner(
+                bannerPosition: CornerBannerPosition.topRight,
+                bannerColor: Colors.red,
+                child: Text('Under Development'),
               ),
             ),
-            Expanded(child: HomeContent(colorScheme: colorScheme)),
           ],
         ),
         bottomNavigationBar: DisappearingNavigationBottom(
@@ -142,6 +155,7 @@ class _HomeViewState extends State<HomeView>
 
 class HomeContent extends StatefulWidget {
   final ColorScheme colorScheme;
+
   const HomeContent({super.key, required this.colorScheme});
 
   @override
