@@ -168,12 +168,8 @@ class _HomeContentState extends State<HomeContent> {
   // Flag to prevent the scroll-spy from firing while we are animating to a section
   bool _isAutoScrolling = false;
 
-  // Flag to prevent the BlocListener from forcing a scroll when WE caused the state change manually
-  bool _isManuallyScrollingDetect = false;
-
-  // Debounce timer for scroll detection
-  int _lastScrollUpdate = 0;
-  static const _scrollDebounceMs = 50;
+  // Set to track destination changes initiated by user scrolling
+  final Set<int> _manualScrollDestinations = {};
 
   @override
   void initState() {
@@ -193,29 +189,24 @@ class _HomeContentState extends State<HomeContent> {
     // 1. If we are auto-scrolling (animation), don't try to detect sections
     if (_isAutoScrolling) return;
 
-    // 2. Debounce: Prevent rapid updates during fast scrolling
-    final now = DateTime.now().millisecondsSinceEpoch;
-    if (now - _lastScrollUpdate < _scrollDebounceMs) return;
-    _lastScrollUpdate = now;
-
     final cubit = context.read<HomeCubit>();
     final screenHeight = MediaQuery.sizeOf(context).height;
 
-    // 3. Check if scrolled to bottom - select last section (Contact)
+    // 2. Check if scrolled to bottom - select last section (Contact)
     if (_scrollController.hasClients) {
       final maxScroll = _scrollController.position.maxScrollExtent;
       final currentScroll = _scrollController.position.pixels;
       // If within 50 pixels of bottom, select last section
       if (maxScroll - currentScroll < 50) {
         if (cubit.state.destination != 4) {
-          _isManuallyScrollingDetect = true;
+          _manualScrollDestinations.add(4);
           cubit.changeDestination(4);
         }
         return;
       }
     }
 
-    // 4. Use 25% threshold for earlier, more natural detection
+    // 3. Use 25% threshold for earlier, more natural detection
     final threshold = screenHeight * 0.25;
 
     double? getY(GlobalKey key) {
@@ -237,8 +228,8 @@ class _HomeContentState extends State<HomeContent> {
     }
 
     if (newIndex != cubit.state.destination) {
-      // 5. Mark that this change is coming from a manual scroll
-      _isManuallyScrollingDetect = true;
+      // 4. Mark that this change is coming from a manual scroll
+      _manualScrollDestinations.add(newIndex);
       cubit.changeDestination(newIndex);
     }
   }
@@ -266,13 +257,12 @@ class _HomeContentState extends State<HomeContent> {
       listenWhen: (previous, current) =>
           previous.destination != current.destination,
       listener: (context, state) {
-        // 4. THE FIX: If this state change was caused by manual scrolling, ignore it.
-        if (_isManuallyScrollingDetect) {
-          _isManuallyScrollingDetect = false;
+        if (_manualScrollDestinations.remove(state.destination)) {
+          // This state change was naturally triggered by scrolling, do not auto-scroll.
           return;
         }
 
-        if (_scrollController.hasClients && !_isAutoScrolling) {
+        if (_scrollController.hasClients) {
           _scrollToSection(state.destination);
         }
       },
@@ -287,7 +277,6 @@ class _HomeContentState extends State<HomeContent> {
           child: CustomScrollView(
             controller: _scrollController,
             slivers: [
-              // Ensure these widgets actually assign the key to their root RenderObject!
               SliverToBoxAdapter(child: AboutSection(key: _sectionKeys[0])),
               SliverToBoxAdapter(child: ProjectsSection(key: _sectionKeys[1])),
               SliverToBoxAdapter(
