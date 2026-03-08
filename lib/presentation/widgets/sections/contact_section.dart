@@ -130,7 +130,7 @@ class ContactSection extends StatelessWidget {
           Text(
             '© ${DateTime.now().year} ${AppConstants.footerCopyright}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppColors.textSecondary.withOpacity(0.7),
+              color: AppColors.textSecondary.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -167,7 +167,7 @@ class _ContactItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(
             context,
-          ).colorScheme.surfaceContainerHigh.withOpacity(0.3),
+          ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           border: Border.all(color: AppColors.glassBorder),
         ),

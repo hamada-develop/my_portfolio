@@ -79,11 +79,11 @@ class SectionTitle extends StatelessWidget {
   final TextAlign? textAlign;
 
   const SectionTitle({
-    Key? key,
+    super.key,
     required this.title,
     this.subtitle,
     this.textAlign,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

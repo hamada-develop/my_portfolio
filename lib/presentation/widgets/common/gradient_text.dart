@@ -37,11 +37,11 @@ class GradientRichText extends StatelessWidget {
   final TextAlign? textAlign;
 
   const GradientRichText({
-    Key? key,
+    super.key,
     required this.children,
     required this.gradient,
     this.textAlign,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

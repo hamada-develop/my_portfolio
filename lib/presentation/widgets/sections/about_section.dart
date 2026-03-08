@@ -20,8 +20,8 @@ class _AboutSectionState extends State<AboutSection>
   late AnimationController _controller;
   late Animation<double> _floatAnimation;
 
-  final color1 = Color(0xFF11071F).withOpacity(0.63);
-  final color2 = Color(0xFF11071F).withOpacity(0.95);
+  final color1 = Color(0xFF11071F).withValues(alpha: 0.63);
+  final color2 = Color(0xFF11071F).withValues(alpha: 0.95);
 
   @override
   void initState() {
@@ -101,7 +101,7 @@ class _AboutSectionState extends State<AboutSection>
                 .shimmer(
               duration: 2000.ms,
               delay: 800.ms,
-              color: AppColors.primaryPink.withOpacity(0.3),
+              color: AppColors.primaryPink.withValues(alpha: 0.3),
             ),
           ),
 
@@ -240,7 +240,7 @@ class _AboutSectionState extends State<AboutSection>
                           .shimmer(
                         duration: 1500.ms,
                         delay: 1200.ms,
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
                     ],
                   ),
@@ -289,7 +289,7 @@ class _AboutSectionState extends State<AboutSection>
                         .shimmer(
                       duration: 10000.ms,
                       delay: 1800.ms,
-                      color: Colors.white.withOpacity(0.4),
+                      color: Colors.white.withValues(alpha: 0.4),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -315,7 +315,7 @@ class _AboutSectionState extends State<AboutSection>
                             .shimmer(
                           duration: 10000.ms,
                           delay: 2200.ms,
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withValues(alpha: 0.5),
                         ),
                         Text(
                           '...',
@@ -432,7 +432,6 @@ class _GreetingElement extends StatelessWidget {
   final Responsive responsive;
 
   const _GreetingElement({
-    super.key,
     required this.children,
     required this.responsive,
   });

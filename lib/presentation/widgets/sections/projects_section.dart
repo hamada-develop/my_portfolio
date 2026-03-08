@@ -200,12 +200,12 @@ class _ProjectCard extends StatelessWidget {
                               color: Theme.of(context)
                                   .colorScheme
                                   .surfaceContainerHigh
-                                  .withOpacity(0.3),
+                                  .withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(
                                 AppConstants.radiusSm,
                               ),
                               border: Border.all(
-                                color: AppColors.glassBorder.withOpacity(0.5),
+                                color: AppColors.glassBorder.withValues(alpha: 0.5),
                               ),
                             ),
                             child: Text(
@@ -241,7 +241,7 @@ class _ProjectCard extends StatelessWidget {
                         icon: const Icon(Icons.apple),
                         tooltip: 'App Store',
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(0.1),
+                          backgroundColor: Colors.white.withValues(alpha: 0.1),
                         ),
                       ),
                     const SizedBox(width: 8),
@@ -251,7 +251,7 @@ class _ProjectCard extends StatelessWidget {
                         icon: const Icon(Icons.android),
                         tooltip: 'Play Store',
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(0.1),
+                          backgroundColor: Colors.white.withValues(alpha: 0.1),
                         ),
                       ),
                     const SizedBox(width: 8),
@@ -261,7 +261,7 @@ class _ProjectCard extends StatelessWidget {
                         icon: const Icon(Icons.language),
                         tooltip: 'Website',
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(0.1),
+                          backgroundColor: Colors.white.withValues(alpha: 0.1),
                         ),
                       ),
                   ],

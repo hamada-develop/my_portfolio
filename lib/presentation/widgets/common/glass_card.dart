@@ -14,7 +14,7 @@ class GlassCard extends StatefulWidget {
   final double? height;
 
   const GlassCard({
-    Key? key,
+    super.key,
     required this.child,
     this.padding,
     this.borderRadius,
@@ -23,7 +23,7 @@ class GlassCard extends StatefulWidget {
     this.onTap,
     this.width,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   State<GlassCard> createState() => _GlassCardState();
@@ -73,14 +73,14 @@ class GlassCardWithGradientBorder extends StatefulWidget {
   final VoidCallback? onTap;
 
   const GlassCardWithGradientBorder({
-    Key? key,
+    super.key,
     required this.child,
     this.padding,
     this.borderRadius,
     required this.gradient,
     this.enableHover = true,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<GlassCardWithGradientBorder> createState() =>
