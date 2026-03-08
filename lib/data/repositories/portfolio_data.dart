@@ -14,7 +14,7 @@ class PortfolioData {
       subtitle: 'Dream Interpretation Platform',
       period: 'Jul 2022 – Oct 2025',
       description:
-      'Led architectural planning and delivery using Clean Architecture and BLoC, '
+          'Led architectural planning and delivery using Clean Architecture and BLoC, '
           'driving app to production with an active user base. Implemented secure online '
           'payments (HyperPay) and WebRTC voice calls, enabling monetization and real-time '
           'features. Performed targeted profiling and UI optimizations, achieving an estimated '
@@ -33,13 +33,14 @@ class PortfolioData {
         playStore: AppConstants.aberPlayStore,
       ),
       gradient: AppColors.projectGradient1,
+      image: AppConstants.abberProject,
     ),
     ProjectModel(
       title: 'Atmemly',
       subtitle: 'Freelancing Platform',
       period: 'Jul 2023 – Oct 2023',
       description:
-      'Built a freelancing platform that connects project owners with freelancers. '
+          'Built a freelancing platform that connects project owners with freelancers. '
           'Implemented push notification system (Firebase Cloud Messaging) with deep linking '
           'and user segmentation. Designed responsive & adaptive UIs for seamless user experience '
           'across different devices and screen sizes.',
@@ -61,7 +62,7 @@ class PortfolioData {
       subtitle: 'Sports Social Media',
       period: 'Jan 2023 – Oct 2023',
       description:
-      'Built multi-role video platform supporting Clubs, Players, Coaches and more (9 profiles). '
+          'Built multi-role video platform supporting Clubs, Players, Coaches and more (9 profiles). '
           'Implemented video Reels and optimized playback lifecycle. Eliminated persistent dark-mode '
           'UI jank via render-thread profiling and widget rebuild fixes, improving 90th-percentile '
           'frame-rate to 60fps for core flows.',
@@ -84,7 +85,7 @@ class PortfolioData {
       subtitle: 'Pilgrimage Assistant App',
       period: '2022 - 2023',
       description:
-      'Contributed to high-reliability features: navigation, multi-directional request handling, '
+          'Contributed to high-reliability features: navigation, multi-directional request handling, '
           'state persistence, and crash reliability improvements. Implemented core features for '
           'pilgrimage guidance with offline support and real-time updates.',
       technologies: [
@@ -159,12 +160,7 @@ class PortfolioData {
         'Focused on state-management and error handling best practices',
         'Delivered features on time with high code quality standards',
       ],
-      technologies: [
-        'Flutter',
-        'BLoC',
-        'E-commerce',
-        'State Management',
-      ],
+      technologies: ['Flutter', 'BLoC', 'E-commerce', 'State Management'],
     ),
     const ExperienceModel(
       company: 'IEEE-Elzaher',
@@ -178,12 +174,7 @@ class PortfolioData {
         'Helped students build their first Flutter applications',
         'Shared industry knowledge and career guidance',
       ],
-      technologies: [
-        'Flutter',
-        'Teaching',
-        'Mentoring',
-        'State Management',
-      ],
+      technologies: ['Flutter', 'Teaching', 'Mentoring', 'State Management'],
     ),
   ];
 
@@ -259,12 +250,7 @@ class PortfolioData {
     const SkillCategory(
       category: 'Native Interop',
       icon: '📲',
-      skills: [
-        'Kotlin',
-        'Java',
-        'Swift',
-        'Platform Channels',
-      ],
+      skills: ['Kotlin', 'Java', 'Swift', 'Platform Channels'],
     ),
     const SkillCategory(
       category: 'Leadership',
@@ -317,10 +303,7 @@ class PortfolioData {
       name: 'HMS Core App Developer Workshop',
       issuer: 'Huawei',
     ),
-    const CertificateModel(
-      name: 'Android Developer',
-      issuer: 'Udacity',
-    ),
+    const CertificateModel(name: 'Android Developer', issuer: 'Udacity'),
     const CertificateModel(
       name: 'One Million Arab Coders Initiative',
       issuer: 'One Million Arab Coders',
