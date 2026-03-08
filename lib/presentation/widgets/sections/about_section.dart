@@ -63,7 +63,7 @@ class _AboutSectionState extends State<AboutSection>
             top: 0,
             child:
                 Image.asset(
-                      AppConstants.avatarSecondary,
+                      AppConstants.avatarPrimary,
                       height: responsive.getValue(
                         mobile: screenHeight,
                         desktop: screenHeight,
