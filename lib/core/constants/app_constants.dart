@@ -3,7 +3,7 @@ class AppConstants {
 
   // Personal Information
   static const String name = 'Hamada Mohamed Seif';
-  static const String title = 'Flutter Developer';
+  static const String title = 'Senior Flutter Developer';
   static const String tagline = 'A Developer who Judges a book by its cover...';
   static const String taglineSubtext =
       'Because if the cover doesn\'t impress you what else can?';
