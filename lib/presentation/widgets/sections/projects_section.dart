@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../data/repositories/portfolio_data.dart';
@@ -18,56 +20,231 @@ class ProjectsSection extends StatelessWidget {
     final responsive = context.responsive;
     final projects = PortfolioData.projects;
 
-    return SectionContainer(
-      child: Column(
-        children: [
-          // Title
-          GradientText(
-            text: AppConstants.sectionTitleProjects,
-            gradient: AppColors.textGradient,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              fontSize: responsive.getValue(
-                mobile: 28,
-                tablet: 32,
-                desktop: 36,
+    return Column(
+      children: [
+        SectionContainer(
+          useMinHeight: false,
+          child: Column(
+            children: [
+              // Title
+              GradientText(
+                text: AppConstants.sectionTitleProjects,
+                gradient: AppColors.textGradient,
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  fontSize: responsive.getValue(
+                    mobile: 28,
+                    tablet: 32,
+                    desktop: 36,
+                  ),
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-            textAlign: TextAlign.center,
-          ),
 
-          SizedBox(
-            height: responsive.getValue(
-              mobile: AppConstants.spacingXl,
-              tablet: AppConstants.spacingXxl,
-              desktop: AppConstants.spacing3xl,
-            ),
+              SizedBox(
+                height: responsive.getValue(
+                  mobile: AppConstants.spacingXl,
+                  tablet: AppConstants.spacingXxl,
+                  desktop: AppConstants.spacing3xl,
+                ),
+              ),
+            ],
           ),
+        ),
 
-          // Projects Grid
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: responsive.getValue(
-                mobile: 1,
-                tablet: 2,
-                desktop: 2,
-              ),
-              crossAxisSpacing: AppConstants.spacingLg,
-              mainAxisSpacing: AppConstants.spacingLg,
-              childAspectRatio: responsive.getValue(
-                mobile: 0.85,
-                tablet: 0.75,
-                desktop: 1.1,
+        // Projects Slider outside SectionContainer for full width
+        _ProjectsSlider(projects: projects),
+
+        // Add bottom padding to account for the removed SectionContainer's min height
+        SizedBox(
+          height: responsive.getValue(mobile: 40, tablet: 80, desktop: 120),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProjectsSlider extends StatefulWidget {
+  final List<ProjectModel> projects;
+
+  const _ProjectsSlider({required this.projects});
+
+  @override
+  State<_ProjectsSlider> createState() => _ProjectsSliderState();
+}
+
+class _ProjectsSliderState extends State<_ProjectsSlider> {
+  late PageController _pageController;
+  int _currentPage = 0;
+  double _currentViewportFraction = 0.85;
+  static const int _loopScale = 1000;
+  Timer? _autoScrollTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentPage = widget.projects.isEmpty
+        ? 0
+        : (widget.projects.length * (_loopScale ~/ 2));
+    _pageController = PageController(
+      viewportFraction: _currentViewportFraction,
+      initialPage: _currentPage,
+    );
+    _startAutoScroll();
+  }
+
+  void _startAutoScroll() {
+    _autoScrollTimer?.cancel();
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (_pageController.hasClients) {
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 1000),
+          curve: Curves.easeInOutCubic,
+        );
+      }
+    });
+  }
+
+  void _stopAutoScroll() {
+    _autoScrollTimer?.cancel();
+    _autoScrollTimer = null;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final responsive = context.responsive;
+    final newViewportFraction = responsive.getValue<double>(
+      mobile: 0.95, // Near full width on mobile
+      tablet: 0.75, // Wider on tablet
+      desktop: 0.5, // Wider on desktop too
+    );
+
+    if (newViewportFraction != _currentViewportFraction) {
+      _currentViewportFraction = newViewportFraction;
+      _pageController.dispose();
+      _pageController = PageController(
+        viewportFraction: _currentViewportFraction,
+        initialPage: _currentPage,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _stopAutoScroll();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.projects.isEmpty) return const SizedBox();
+
+    final responsive = context.responsive;
+    final double height = responsive.getValue(
+      mobile: 540,
+      tablet: 600,
+      desktop: 650,
+    );
+
+    return Column(
+      children: [
+        SizedBox(
+          height: height,
+          child: MouseRegion(
+            onEnter: (_) => _stopAutoScroll(),
+            onExit: (_) => _startAutoScroll(),
+            child: Listener(
+              onPointerDown: (_) => _stopAutoScroll(),
+              onPointerUp: (_) => _startAutoScroll(),
+              onPointerSignal: (pointerSignal) {
+                if (pointerSignal is PointerScrollEvent) {
+                  // Manual pass-through for vertical scrolling on trackpads
+                  if (pointerSignal.scrollDelta.dy.abs() >
+                      pointerSignal.scrollDelta.dx.abs()) {
+                    final scrollable = Scrollable.of(context);
+                    scrollable.position.jumpTo(
+                      scrollable.position.pixels + pointerSignal.scrollDelta.dy,
+                    );
+                  }
+                }
+              },
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                  dragDevices: {
+                    PointerDeviceKind.mouse,
+                    PointerDeviceKind.trackpad,
+                    PointerDeviceKind.touch,
+                  },
+                ),
+                child: PageView.builder(
+                  controller: _pageController,
+                  physics: const BouncingScrollPhysics(),
+                  allowImplicitScrolling: true,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  itemCount: widget.projects.length * _loopScale,
+                  itemBuilder: (context, index) {
+                    final projectIndex = index % widget.projects.length;
+                    return AnimatedBuilder(
+                      animation: _pageController,
+                      builder: (context, child) {
+                        double value = 1.0;
+                        if (_pageController.position.haveDimensions) {
+                          value = _pageController.page! - index;
+                          value = (1 - (value.abs() * 0.15)).clamp(0.0, 1.0);
+                        } else {
+                          value = _currentPage == index ? 1.0 : 0.85;
+                        }
+
+                        return Transform.scale(
+                          scale: Curves.easeOut.transform(value),
+                          child: Opacity(
+                            opacity: value.clamp(0.5, 1.0),
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.spacingSm,
+                          vertical: AppConstants.spacingMd,
+                        ),
+                        child: _ProjectCard(
+                          project: widget.projects[projectIndex],
+                          index: index,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-            itemCount: projects.length,
-            itemBuilder: (context, index) {
-              return _ProjectCard(project: projects[index], index: index);
-            },
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: AppConstants.spacingLg),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(widget.projects.length, (index) {
+            final isSelected = (_currentPage % widget.projects.length) == index;
+            return AnimatedContainer(
+              duration: AppConstants.animationNormal,
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              height: 8,
+              width: isSelected ? 24 : 8,
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppColors.primaryBlue
+                    : AppColors.glassBorder,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            );
+          }),
+        ),
+      ],
     );
   }
 }
@@ -98,9 +275,9 @@ class _ProjectCard extends StatelessWidget {
               // Project Gradient Header / Image Placeholder
               Container(
                 height: responsive.getValue(
-                  mobile: 140,
-                  tablet: 160,
-                  desktop: 180,
+                  mobile: 220,
+                  tablet: 260,
+                  desktop: 380,
                 ),
                 decoration: BoxDecoration(
                   gradient: project.gradient,
@@ -110,16 +287,26 @@ class _ProjectCard extends StatelessWidget {
                 ),
                 child: Stack(
                   children: [
-                    Center(
-                      child: Text(
-                        project.title[0],
-                        style: const TextStyle(
-                          fontSize: 64,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white24,
+                    if (project.image != null)
+                      Positioned.fill(
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(AppConstants.radiusLg),
+                          ),
+                          child: Image.asset(project.image!, fit: BoxFit.cover),
+                        ),
+                      )
+                    else
+                      Center(
+                        child: Text(
+                          project.title[0],
+                          style: const TextStyle(
+                            fontSize: 64,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white24,
+                          ),
                         ),
                       ),
-                    ),
                     Positioned(
                       bottom: AppConstants.spacingMd,
                       left: AppConstants.spacingMd,
@@ -151,7 +338,7 @@ class _ProjectCard extends StatelessWidget {
               // Content
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(AppConstants.spacingLg),
+                  padding: const EdgeInsets.all(AppConstants.spacingSm),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -163,7 +350,7 @@ class _ProjectCard extends StatelessWidget {
                               color: Colors.white,
                             ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppConstants.spacingXs),
                       Text(
                         project.subtitle,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -171,7 +358,7 @@ class _ProjectCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: AppConstants.spacingMd),
+                      const SizedBox(height: AppConstants.spacingSm),
                       Expanded(
                         child: Text(
                           project.description,
@@ -184,7 +371,7 @@ class _ProjectCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(height: AppConstants.spacingMd),
+                      const SizedBox(height: AppConstants.spacingSm),
 
                       // Technologies
                       Wrap(
@@ -232,7 +419,7 @@ class _ProjectCard extends StatelessWidget {
                   AppConstants.spacingLg,
                   0,
                   AppConstants.spacingLg,
-                  AppConstants.spacingLg,
+                  AppConstants.spacingSm,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -273,11 +460,7 @@ class _ProjectCard extends StatelessWidget {
           ),
         )
         .animate()
-        .fadeIn(duration: 600.ms, delay: (100 * index).ms)
-        .scale(
-          begin: const Offset(0.95, 0.95),
-          duration: 600.ms,
-          delay: (100 * index).ms,
-        );
+        .fadeIn(duration: 600.ms)
+        .scale(begin: const Offset(0.95, 0.95), duration: 600.ms);
   }
 }
