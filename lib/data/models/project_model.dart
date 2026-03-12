@@ -8,6 +8,7 @@ class ProjectModel {
   final List<String> technologies;
   final ProjectLinks links;
   final LinearGradient gradient;
+  final String? image;
 
   const ProjectModel({
     required this.title,
@@ -17,6 +18,7 @@ class ProjectModel {
     required this.technologies,
     required this.links,
     required this.gradient,
+    this.image,
   });
 }
 
@@ -35,39 +37,27 @@ class ProjectLinks {
 
   bool get hasLinks =>
       appStore != null ||
-          playStore != null ||
-          web != null ||
-          appGallery != null;
+      playStore != null ||
+      web != null ||
+      appGallery != null;
 
   List<ProjectLink> get availableLinks {
     List<ProjectLink> links = [];
     if (appStore != null) {
-      links.add(ProjectLink(
-        url: appStore!,
-        platform: 'App Store',
-        icon: '🍎',
-      ));
+      links.add(ProjectLink(url: appStore!, platform: 'App Store', icon: '🍎'));
     }
     if (playStore != null) {
-      links.add(ProjectLink(
-        url: playStore!,
-        platform: 'Google Play',
-        icon: '🤖',
-      ));
+      links.add(
+        ProjectLink(url: playStore!, platform: 'Google Play', icon: '🤖'),
+      );
     }
     if (web != null) {
-      links.add(ProjectLink(
-        url: web!,
-        platform: 'Web',
-        icon: '🌐',
-      ));
+      links.add(ProjectLink(url: web!, platform: 'Web', icon: '🌐'));
     }
     if (appGallery != null) {
-      links.add(ProjectLink(
-        url: appGallery!,
-        platform: 'App Gallery',
-        icon: '📱',
-      ));
+      links.add(
+        ProjectLink(url: appGallery!, platform: 'App Gallery', icon: '📱'),
+      );
     }
     return links;
   }

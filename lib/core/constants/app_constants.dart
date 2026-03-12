@@ -47,6 +47,27 @@ class AppConstants {
   static const String mutawwifAppGallery =
       'https://appgallery.huawei.com/app/al-mutawwif';
 
+  // Assets
+  static const String avatarPrimary = 'assets/hamada.png';
+  static const String abberProject = 'assets/Abber.png';
+
+  // Tooltips
+  static const String tooltipAppStore = 'App Store';
+  static const String tooltipPlayStore = 'Play Store';
+  static const String tooltipWebsite = 'Website';
+
+  // Global UI
+  static const String bannerUnderDevelopment = 'Under Development';
+
+  // About Section Strings
+  static const String greetingPrefix = 'Hello! I Am ';
+  static const String heroLine1 = 'A Developer who';
+  static const String heroLine2 = 'Judges a book';
+  static const String heroLine3Prefix = 'by its ';
+  static const String heroLine3Highlight = 'cover';
+  static const String heroLine3Suffix = '...';
+  // I\'m a $title. is handled by composing string.
+
   // Spacing
   static const double spacingXs = 4.0;
   static const double spacingSm = 8.0;
