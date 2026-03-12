@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -75,14 +76,37 @@ class _ProjectsSliderState extends State<_ProjectsSlider> {
   late PageController _pageController;
   int _currentPage = 0;
   double _currentViewportFraction = 0.85;
+  static const int _loopScale = 1000;
+  Timer? _autoScrollTimer;
 
   @override
   void initState() {
     super.initState();
+    _currentPage = widget.projects.isEmpty
+        ? 0
+        : (widget.projects.length * (_loopScale ~/ 2));
     _pageController = PageController(
       viewportFraction: _currentViewportFraction,
       initialPage: _currentPage,
     );
+    _startAutoScroll();
+  }
+
+  void _startAutoScroll() {
+    _autoScrollTimer?.cancel();
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (_pageController.hasClients) {
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 1000),
+          curve: Curves.easeInOutCubic,
+        );
+      }
+    });
+  }
+
+  void _stopAutoScroll() {
+    _autoScrollTimer?.cancel();
+    _autoScrollTimer = null;
   }
 
   @override
@@ -107,6 +131,7 @@ class _ProjectsSliderState extends State<_ProjectsSlider> {
 
   @override
   void dispose() {
+    _stopAutoScroll();
     _pageController.dispose();
     super.dispose();
   }
@@ -126,75 +151,98 @@ class _ProjectsSliderState extends State<_ProjectsSlider> {
       children: [
         SizedBox(
           height: height,
-          child: ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context).copyWith(
-              dragDevices: {
-                PointerDeviceKind.touch,
-                PointerDeviceKind.mouse,
-                PointerDeviceKind.trackpad,
+          child: MouseRegion(
+            onEnter: (_) => _stopAutoScroll(),
+            onExit: (_) => _startAutoScroll(),
+            child: Listener(
+              onPointerDown: (_) => _stopAutoScroll(),
+              onPointerUp: (_) => _startAutoScroll(),
+              onPointerSignal: (pointerSignal) {
+                if (pointerSignal is PointerScrollEvent) {
+                  // Manual pass-through for vertical scrolling on trackpads
+                  if (pointerSignal.scrollDelta.dy.abs() >
+                      pointerSignal.scrollDelta.dx.abs()) {
+                    final scrollable = Scrollable.of(context);
+                    scrollable.position.jumpTo(
+                      scrollable.position.pixels + pointerSignal.scrollDelta.dy,
+                    );
+                  }
+                }
               },
-            ),
-            child: PageView.builder(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentPage = index;
-                });
-              },
-              itemCount: widget.projects.length,
-              itemBuilder: (context, index) {
-                return AnimatedBuilder(
-                  animation: _pageController,
-                  builder: (context, child) {
-                    double value = 1.0;
-                    if (_pageController.position.haveDimensions) {
-                      value = _pageController.page! - index;
-                      value = (1 - (value.abs() * 0.15)).clamp(0.0, 1.0);
-                    } else {
-                      value = _currentPage == index ? 1.0 : 0.85;
-                    }
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                  dragDevices: {
+                    PointerDeviceKind.mouse,
+                    PointerDeviceKind.trackpad,
+                    PointerDeviceKind.touch,
+                  },
+                ),
+                child: PageView.builder(
+                  controller: _pageController,
+                  physics: const BouncingScrollPhysics(),
+                  allowImplicitScrolling: true,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  itemCount: widget.projects.length * _loopScale,
+                  itemBuilder: (context, index) {
+                    final projectIndex = index % widget.projects.length;
+                    return AnimatedBuilder(
+                      animation: _pageController,
+                      builder: (context, child) {
+                        double value = 1.0;
+                        if (_pageController.position.haveDimensions) {
+                          value = _pageController.page! - index;
+                          value = (1 - (value.abs() * 0.15)).clamp(0.0, 1.0);
+                        } else {
+                          value = _currentPage == index ? 1.0 : 0.85;
+                        }
 
-                    return Transform.scale(
-                      scale: Curves.easeOut.transform(value),
-                      child: Opacity(
-                        opacity: value.clamp(0.5, 1.0),
-                        child: child,
+                        return Transform.scale(
+                          scale: Curves.easeOut.transform(value),
+                          child: Opacity(
+                            opacity: value.clamp(0.5, 1.0),
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppConstants.spacingSm,
+                          vertical: AppConstants.spacingMd,
+                        ),
+                        child: _ProjectCard(
+                          project: widget.projects[projectIndex],
+                          index: index,
+                        ),
                       ),
                     );
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppConstants.spacingSm,
-                      vertical: AppConstants.spacingMd,
-                    ),
-                    child: _ProjectCard(
-                      project: widget.projects[index],
-                      index: index,
-                    ),
-                  ),
-                );
-              },
+                ),
+              ),
             ),
           ),
         ),
         const SizedBox(height: AppConstants.spacingLg),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            widget.projects.length,
-            (index) => AnimatedContainer(
+          children: List.generate(widget.projects.length, (index) {
+            final isSelected = (_currentPage % widget.projects.length) == index;
+            return AnimatedContainer(
               duration: AppConstants.animationNormal,
               margin: const EdgeInsets.symmetric(horizontal: 4),
               height: 8,
-              width: _currentPage == index ? 24 : 8,
+              width: isSelected ? 24 : 8,
               decoration: BoxDecoration(
-                color: _currentPage == index
+                color: isSelected
                     ? AppColors.primaryBlue
                     : AppColors.glassBorder,
                 borderRadius: BorderRadius.circular(4),
               ),
-            ),
-          ),
+            );
+          }),
         ),
       ],
     );
@@ -229,7 +277,7 @@ class _ProjectCard extends StatelessWidget {
                 height: responsive.getValue(
                   mobile: 220,
                   tablet: 260,
-                  desktop: 300,
+                  desktop: 380,
                 ),
                 decoration: BoxDecoration(
                   gradient: project.gradient,
@@ -290,7 +338,7 @@ class _ProjectCard extends StatelessWidget {
               // Content
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(AppConstants.spacingLg),
+                  padding: const EdgeInsets.all(AppConstants.spacingSm),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -302,7 +350,7 @@ class _ProjectCard extends StatelessWidget {
                               color: Colors.white,
                             ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppConstants.spacingXs),
                       Text(
                         project.subtitle,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -310,7 +358,7 @@ class _ProjectCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: AppConstants.spacingMd),
+                      const SizedBox(height: AppConstants.spacingSm),
                       Expanded(
                         child: Text(
                           project.description,
@@ -323,7 +371,7 @@ class _ProjectCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(height: AppConstants.spacingMd),
+                      const SizedBox(height: AppConstants.spacingSm),
 
                       // Technologies
                       Wrap(
@@ -371,7 +419,7 @@ class _ProjectCard extends StatelessWidget {
                   AppConstants.spacingLg,
                   0,
                   AppConstants.spacingLg,
-                  AppConstants.spacingLg,
+                  AppConstants.spacingSm,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -412,11 +460,7 @@ class _ProjectCard extends StatelessWidget {
           ),
         )
         .animate()
-        .fadeIn(duration: 600.ms, delay: (100 * index).ms)
-        .scale(
-          begin: const Offset(0.95, 0.95),
-          duration: 600.ms,
-          delay: (100 * index).ms,
-        );
+        .fadeIn(duration: 600.ms)
+        .scale(begin: const Offset(0.95, 0.95), duration: 600.ms);
   }
 }
