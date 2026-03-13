@@ -101,6 +101,30 @@ class PortfolioData {
         appGallery: AppConstants.mutawwifAppGallery,
       ),
       gradient: AppColors.projectGradient4,
+      image: AppConstants.almotawef
+    ),
+    ProjectModel(
+      title: 'Shooter App',
+      subtitle: 'Pilgrimage Assistant App',
+      period: '2022 - 2023',
+      description:
+          'Contributed to high-reliability features: navigation, multi-directional request handling, '
+          'state persistence, and crash reliability improvements. Implemented core features for '
+          'pilgrimage guidance with offline support and real-time updates.',
+      technologies: [
+        'Flutter',
+        'Maps Integration',
+        'Offline Support',
+        'State Persistence',
+        'High Reliability',
+      ],
+      links: ProjectLinks(
+        appStore: AppConstants.mutawwifAppStore,
+        playStore: AppConstants.mutawwifPlayStore,
+        appGallery: AppConstants.mutawwifAppGallery,
+      ),
+      gradient: AppColors.projectGradient4,
+      image: AppConstants.shooterApp,
     ),
   ];
 
