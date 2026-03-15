@@ -4,10 +4,10 @@ import '../../../data/models/experience_model.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/responsive.dart';
+import '../../../core/widgets/scroll_animate_in.dart';
 import '../common/gradient_text.dart';
 import '../common/sections_container.dart';
 import '../common/glass_card.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class WorkHistorySection extends StatelessWidget {
   const WorkHistorySection({super.key});
@@ -21,17 +21,19 @@ class WorkHistorySection extends StatelessWidget {
       child: Column(
         children: [
           // Title
-          GradientText(
-            text: AppConstants.sectionTitleWorkHistory,
-            gradient: AppColors.textGradient,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              fontSize: responsive.getValue(
-                mobile: 28,
-                tablet: 32,
-                desktop: 36,
+          ScrollAnimateIn(
+            child: GradientText(
+              text: AppConstants.sectionTitleWorkHistory,
+              gradient: AppColors.textGradient,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                fontSize: responsive.getValue(
+                  mobile: 28,
+                  tablet: 32,
+                  desktop: 36,
+                ),
               ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
 
           SizedBox(
@@ -70,7 +72,10 @@ class _ExperienceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final responsive = context.responsive;
 
-    return GlassCard(
+    return ScrollAnimateIn(
+      delay: Duration(milliseconds: 100 * index),
+      slideBegin: const Offset(-0.1, 0),
+      child: GlassCard(
           width: double.infinity,
           padding: EdgeInsets.all(
             responsive.getValue(
@@ -217,9 +222,7 @@ class _ExperienceCard extends StatelessWidget {
               ),
             ],
           ),
-        )
-        .animate()
-        .fadeIn(duration: 600.ms, delay: (100 * index).ms)
-        .slideX(begin: 0.1, end: 0, duration: 600.ms, delay: (100 * index).ms);
+      ),
+    );
   }
 }

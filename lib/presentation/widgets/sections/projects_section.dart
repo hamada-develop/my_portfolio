@@ -10,7 +10,7 @@ import '../../../core/utils/responsive.dart';
 import '../common/gradient_text.dart';
 import '../common/sections_container.dart';
 import '../common/glass_card.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import '../../../core/widgets/scroll_animate_in.dart';
 
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
@@ -27,17 +27,19 @@ class ProjectsSection extends StatelessWidget {
           child: Column(
             children: [
               // Title
-              GradientText(
-                text: AppConstants.sectionTitleProjects,
-                gradient: AppColors.textGradient,
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontSize: responsive.getValue(
-                    mobile: 28,
-                    tablet: 32,
-                    desktop: 36,
+              ScrollAnimateIn(
+                child: GradientText(
+                  text: AppConstants.sectionTitleProjects,
+                  gradient: AppColors.textGradient,
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    fontSize: responsive.getValue(
+                      mobile: 28,
+                      tablet: 32,
+                      desktop: 36,
+                    ),
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
 
               SizedBox(
@@ -458,9 +460,6 @@ class _ProjectCard extends StatelessWidget {
               ),
             ],
           ),
-        )
-        .animate()
-        .fadeIn(duration: 600.ms)
-        .scale(begin: const Offset(0.95, 0.95), duration: 600.ms);
+        );
   }
 }

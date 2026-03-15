@@ -6,7 +6,7 @@ import '../../../core/utils/responsive.dart';
 import '../common/gradient_text.dart';
 import '../common/sections_container.dart';
 import '../common/glass_card.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import '../../../core/widgets/scroll_animate_in.dart';
 
 class ContactSection extends StatelessWidget {
   const ContactSection({super.key});
@@ -27,17 +27,19 @@ class ContactSection extends StatelessWidget {
       child: Column(
         children: [
           // Title
-          GradientText(
-            text: AppConstants.sectionTitleContact,
-            gradient: AppColors.textGradient,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              fontSize: responsive.getValue(
-                mobile: 28,
-                tablet: 32,
-                desktop: 36,
+          ScrollAnimateIn(
+            child: GradientText(
+              text: AppConstants.sectionTitleContact,
+              gradient: AppColors.textGradient,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                fontSize: responsive.getValue(
+                  mobile: 28,
+                  tablet: 32,
+                  desktop: 36,
+                ),
               ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
 
           SizedBox(
@@ -48,7 +50,9 @@ class ContactSection extends StatelessWidget {
             ),
           ),
 
-          GlassCard(
+          ScrollAnimateIn(
+            delay: const Duration(milliseconds: 200),
+            child: GlassCard(
                 width: double.infinity,
                 padding: EdgeInsets.all(
                   responsive.getValue(
@@ -103,10 +107,8 @@ class ContactSection extends StatelessWidget {
                     ),
                   ],
                 ),
-              )
-              .animate()
-              .fadeIn(duration: 800.ms)
-              .slideY(begin: 0.2, end: 0, duration: 800.ms),
+              ),
+          ),
 
           SizedBox(
             height: responsive.getValue(

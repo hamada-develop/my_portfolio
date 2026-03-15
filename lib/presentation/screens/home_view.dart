@@ -278,13 +278,31 @@ class _HomeContentState extends State<HomeContent> {
           child: CustomScrollView(
             controller: _scrollController,
             slivers: [
-              SliverToBoxAdapter(child: AboutSection(key: _sectionKeys[0])),
-              SliverToBoxAdapter(child: ProjectsSection(key: _sectionKeys[1])),
               SliverToBoxAdapter(
-                child: WorkHistorySection(key: _sectionKeys[2]),
+                child: RepaintBoundary(
+                  child: AboutSection(key: _sectionKeys[0]),
+                ),
               ),
-              SliverToBoxAdapter(child: SkillsSection(key: _sectionKeys[3])),
-              SliverToBoxAdapter(child: ContactSection(key: _sectionKeys[4])),
+              SliverToBoxAdapter(
+                child: RepaintBoundary(
+                  child: ProjectsSection(key: _sectionKeys[1]),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: RepaintBoundary(
+                  child: WorkHistorySection(key: _sectionKeys[2]),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: RepaintBoundary(
+                  child: SkillsSection(key: _sectionKeys[3]),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: RepaintBoundary(
+                  child: ContactSection(key: _sectionKeys[4]),
+                ),
+              ),
             ],
           ),
         ),
