@@ -10,7 +10,7 @@ import '../../../core/utils/responsive.dart';
 import '../common/gradient_text.dart';
 import '../common/sections_container.dart';
 import '../common/glass_card.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import '../../../core/widgets/scroll_animate_in.dart';
 
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
@@ -27,17 +27,19 @@ class ProjectsSection extends StatelessWidget {
           child: Column(
             children: [
               // Title
-              GradientText(
-                text: AppConstants.sectionTitleProjects,
-                gradient: AppColors.textGradient,
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontSize: responsive.getValue(
-                    mobile: 28,
-                    tablet: 32,
-                    desktop: 36,
+              ScrollAnimateIn(
+                child: GradientText(
+                  text: AppConstants.sectionTitleProjects,
+                  gradient: AppColors.textGradient,
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    fontSize: responsive.getValue(
+                      mobile: 28,
+                      tablet: 32,
+                      desktop: 36,
+                    ),
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
 
               SizedBox(
@@ -114,9 +116,9 @@ class _ProjectsSliderState extends State<_ProjectsSlider> {
     super.didChangeDependencies();
     final responsive = context.responsive;
     final newViewportFraction = responsive.getValue<double>(
-      mobile: 0.95, // Near full width on mobile
-      tablet: 0.75, // Wider on tablet
-      desktop: 0.5, // Wider on desktop too
+      mobile: 0.85,
+      tablet: 0.6,
+      desktop: 0.4,
     );
 
     if (newViewportFraction != _currentViewportFraction) {
@@ -192,18 +194,21 @@ class _ProjectsSliderState extends State<_ProjectsSlider> {
                     return AnimatedBuilder(
                       animation: _pageController,
                       builder: (context, child) {
-                        double value = 1.0;
+                        double scale = 1.0;
+                        double opacity = 1.0;
                         if (_pageController.position.haveDimensions) {
-                          value = _pageController.page! - index;
-                          value = (1 - (value.abs() * 0.15)).clamp(0.0, 1.0);
+                          double pageDiff = (_pageController.page! - index).abs();
+                          scale = (1 - (pageDiff * 0.2)).clamp(0.0, 1.0);
+                          opacity = (1 - (pageDiff * 0.4)).clamp(0.3, 1.0);
                         } else {
-                          value = _currentPage == index ? 1.0 : 0.85;
+                          scale = _currentPage == index ? 1.0 : 0.8;
+                          opacity = _currentPage == index ? 1.0 : 0.6;
                         }
 
                         return Transform.scale(
-                          scale: Curves.easeOut.transform(value),
+                          scale: Curves.easeOut.transform(scale),
                           child: Opacity(
-                            opacity: value.clamp(0.5, 1.0),
+                            opacity: opacity,
                             child: child,
                           ),
                         );
@@ -293,7 +298,19 @@ class _ProjectCard extends StatelessWidget {
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(AppConstants.radiusLg),
                           ),
-                          child: Image.asset(project.image!, fit: BoxFit.cover),
+                          child: Image.asset(
+                            project.image!,
+                            fit: BoxFit.cover,
+                            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                              if (wasSynchronouslyLoaded) return child;
+                              return AnimatedOpacity(
+                                opacity: frame == null ? 0 : 1,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeOut,
+                                child: child,
+                              );
+                            },
+                          ),
                         ),
                       )
                     else
@@ -458,9 +475,6 @@ class _ProjectCard extends StatelessWidget {
               ),
             ],
           ),
-        )
-        .animate()
-        .fadeIn(duration: 600.ms)
-        .scale(begin: const Offset(0.95, 0.95), duration: 600.ms);
+        );
   }
 }

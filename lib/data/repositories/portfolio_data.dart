@@ -56,6 +56,7 @@ class PortfolioData {
         playStore: AppConstants.atmemlyPlayStore,
       ),
       gradient: AppColors.projectGradient2,
+      image: AppConstants.atmemly,
     ),
     ProjectModel(
       title: 'Remontada FC',
@@ -79,6 +80,7 @@ class PortfolioData {
         web: AppConstants.remontadaWeb,
       ),
       gradient: AppColors.projectGradient3,
+      image: AppConstants.remontada,
     ),
     ProjectModel(
       title: 'Al-Mutawwif',

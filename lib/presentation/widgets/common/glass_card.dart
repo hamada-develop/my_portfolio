@@ -50,6 +50,7 @@ class _GlassCardState extends State<GlassCard> {
           height: widget.height,
           padding: widget.padding ?? const EdgeInsets.all(AppConstants.spacingLg),
           decoration: AppTheme.glassDecoration(
+            context,
             borderRadius: borderRadius,
             isHovered: _isHovered,
           ),
@@ -125,7 +126,7 @@ class _GlassCardWithGradientBorderState
             margin: const EdgeInsets.all(2),
             padding: widget.padding ?? const EdgeInsets.all(AppConstants.spacingLg),
             decoration: BoxDecoration(
-              color: AppColors.backgroundDeep,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: borderRadius,
             ),
             child: widget.child,
