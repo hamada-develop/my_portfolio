@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_banners/super_banners.dart';
 
@@ -164,6 +165,7 @@ class HomeContent extends StatefulWidget {
 
 class _HomeContentState extends State<HomeContent> {
   late final ScrollController _scrollController;
+  late final FocusNode _focusNode;
   final _sectionKeys = List.generate(5, (index) => GlobalKey());
 
   // Flag to prevent the scroll-spy from firing while we are animating to a section
@@ -177,12 +179,18 @@ class _HomeContentState extends State<HomeContent> {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
+    _focusNode = FocusNode();
+    // Auto-focus the content area for keyboard navigation
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -254,41 +262,113 @@ class _HomeContentState extends State<HomeContent> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeCubit, HomeState>(
-      listenWhen: (previous, current) =>
-          previous.destination != current.destination,
-      listener: (context, state) {
-        if (_manualScrollDestinations.remove(state.destination)) {
-          // This state change was naturally triggered by scrolling, do not auto-scroll.
-          return;
-        }
-
-        if (_scrollController.hasClients) {
-          _scrollToSection(state.destination);
-        }
+    final cubit = context.read<HomeCubit>();
+    return Shortcuts(
+      shortcuts: <ShortcutActivator, Intent>{
+        const SingleActivator(LogicalKeyboardKey.arrowDown):
+            const _NavigateIntent(1),
+        const SingleActivator(LogicalKeyboardKey.arrowUp):
+            const _NavigateIntent(-1),
+        const SingleActivator(LogicalKeyboardKey.home):
+            const _NavigateToIndexIntent(0),
+        const SingleActivator(LogicalKeyboardKey.end):
+            const _NavigateToIndexIntent(4),
+        const SingleActivator(LogicalKeyboardKey.digit1):
+            const _NavigateToIndexIntent(0),
+        const SingleActivator(LogicalKeyboardKey.digit2):
+            const _NavigateToIndexIntent(1),
+        const SingleActivator(LogicalKeyboardKey.digit3):
+            const _NavigateToIndexIntent(2),
+        const SingleActivator(LogicalKeyboardKey.digit4):
+            const _NavigateToIndexIntent(3),
+        const SingleActivator(LogicalKeyboardKey.digit5):
+            const _NavigateToIndexIntent(4),
       },
-      child: Container(
-        margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
-        decoration: BoxDecoration(
-          color: widget.colorScheme.surface,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          child: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              SliverToBoxAdapter(child: AboutSection(key: _sectionKeys[0])),
-              SliverToBoxAdapter(child: ProjectsSection(key: _sectionKeys[1])),
-              SliverToBoxAdapter(
-                child: WorkHistorySection(key: _sectionKeys[2]),
+      child: Actions(
+        actions: <Type, Action<Intent>>{
+          _NavigateIntent: CallbackAction<_NavigateIntent>(
+            onInvoke: (intent) {
+              final current = cubit.state.destination;
+              final next = (current + intent.delta).clamp(0, 4);
+              if (next != current) cubit.changeDestination(next);
+              return null;
+            },
+          ),
+          _NavigateToIndexIntent: CallbackAction<_NavigateToIndexIntent>(
+            onInvoke: (intent) {
+              cubit.changeDestination(intent.index);
+              return null;
+            },
+          ),
+        },
+        child: Focus(
+          focusNode: _focusNode,
+          child: BlocListener<HomeCubit, HomeState>(
+            listenWhen: (previous, current) =>
+                previous.destination != current.destination,
+            listener: (context, state) {
+              if (_manualScrollDestinations.remove(state.destination)) {
+                return;
+              }
+              if (_scrollController.hasClients) {
+                _scrollToSection(state.destination);
+              }
+            },
+            child: Container(
+              margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+              decoration: BoxDecoration(
+                color: widget.colorScheme.surface,
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
               ),
-              SliverToBoxAdapter(child: SkillsSection(key: _sectionKeys[3])),
-              SliverToBoxAdapter(child: ContactSection(key: _sectionKeys[4])),
-            ],
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: RepaintBoundary(
+                        child: AboutSection(key: _sectionKeys[0]),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: RepaintBoundary(
+                        child: ProjectsSection(key: _sectionKeys[1]),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: RepaintBoundary(
+                        child: WorkHistorySection(key: _sectionKeys[2]),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: RepaintBoundary(
+                        child: SkillsSection(key: _sectionKeys[3]),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: RepaintBoundary(
+                        child: ContactSection(key: _sectionKeys[4]),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
     );
   }
+}
+
+/// Intent for relative navigation (up/down by delta).
+class _NavigateIntent extends Intent {
+  final int delta;
+  const _NavigateIntent(this.delta);
+}
+
+/// Intent for direct navigation to a specific section index.
+class _NavigateToIndexIntent extends Intent {
+  final int index;
+  const _NavigateToIndexIntent(this.index);
 }

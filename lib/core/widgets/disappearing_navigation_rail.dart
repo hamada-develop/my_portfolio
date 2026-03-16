@@ -4,6 +4,7 @@ import '../animations.dart';
 import '../destinations.dart';
 import '../transitions/nav_rail_transition.dart';
 import 'animated_floating_action_button.dart';
+import 'theme_toggle_button.dart';
 
 class DisappearingNavigationRail extends StatelessWidget {
   const DisappearingNavigationRail({
@@ -38,7 +39,10 @@ class DisappearingNavigationRail extends StatelessWidget {
               icon: const Icon(Icons.menu),
               tooltip: 'Menu',
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
+            // Theme toggle
+            const ThemeToggleButton(),
+            const SizedBox(height: 4),
             // Wrap FAB in RepaintBoundary for isolated repaints
             RepaintBoundary(
               child: AnimatedFloatingActionButton(
@@ -69,4 +73,3 @@ class DisappearingNavigationRail extends StatelessWidget {
     );
   }
 }
-

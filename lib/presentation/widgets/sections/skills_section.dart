@@ -4,10 +4,10 @@ import '../../../data/models/skill_model.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/responsive.dart';
+import '../../../core/widgets/scroll_animate_in.dart';
 import '../common/gradient_text.dart';
 import '../common/sections_container.dart';
 import '../common/glass_card.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class SkillsSection extends StatelessWidget {
   const SkillsSection({super.key});
@@ -21,17 +21,19 @@ class SkillsSection extends StatelessWidget {
       child: Column(
         children: [
           // Title
-          GradientText(
-            text: AppConstants.sectionTitleSkills,
-            gradient: AppColors.textGradient,
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              fontSize: responsive.getValue(
-                mobile: 28,
-                tablet: 32,
-                desktop: 36,
+          ScrollAnimateIn(
+            child: GradientText(
+              text: AppConstants.sectionTitleSkills,
+              gradient: AppColors.textGradient,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                fontSize: responsive.getValue(
+                  mobile: 28,
+                  tablet: 32,
+                  desktop: 36,
+                ),
               ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
 
           SizedBox(
@@ -73,83 +75,83 @@ class _SkillCategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final responsive = context.responsive;
 
-    return GlassCard(
-          width: responsive.getValue(
-            mobile: double.infinity,
-            tablet: 340,
-            desktop: 380,
-          ),
-          padding: const EdgeInsets.all(AppConstants.spacingLg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryPurple.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(
-                        AppConstants.radiusMd,
-                      ),
-                    ),
-                    child: Text(
-                      category.icon ?? '',
-                      style: const TextStyle(fontSize: 24),
+    return ScrollAnimateIn(
+      delay: Duration(milliseconds: 100 * index),
+      child: GlassCard(
+        width: responsive.getValue(
+          mobile: double.infinity,
+          tablet: 340,
+          desktop: 380,
+        ),
+        padding: const EdgeInsets.all(AppConstants.spacingLg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryPurple.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.radiusMd,
                     ),
                   ),
-                  const SizedBox(width: AppConstants.spacingMd),
-                  Expanded(
-                    child: Text(
-                      category.category,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                  child: Text(
+                    category.icon ?? '',
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                ),
+                const SizedBox(width: AppConstants.spacingMd),
+                Expanded(
+                  child: Text(
+                    category.category,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
 
-              const SizedBox(height: AppConstants.spacingLg),
+            const SizedBox(height: AppConstants.spacingLg),
 
-              // Skills Chips
-              Wrap(
-                spacing: AppConstants.spacingSm,
-                runSpacing: AppConstants.spacingSm,
-                children: category.skills.map((skill) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+            // Skills Chips
+            Wrap(
+              spacing: AppConstants.spacingSm,
+              runSpacing: AppConstants.spacingSm,
+              children: category.skills.map((skill) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.radiusFull,
                     ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHigh.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(
-                        AppConstants.radiusFull,
-                      ),
-                      border: Border.all(
-                        color: AppColors.glassBorder,
-                        width: 1,
-                      ),
+                    border: Border.all(
+                      color: AppColors.glassBorder,
+                      width: 1,
                     ),
-                    child: Text(
-                      skill,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                  ),
+                  child: Text(
+                    skill,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondary,
                     ),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-        )
-        .animate()
-        .fadeIn(duration: 600.ms, delay: (100 * index).ms)
-        .slideY(begin: 0.2, end: 0, duration: 600.ms, delay: (100 * index).ms);
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
