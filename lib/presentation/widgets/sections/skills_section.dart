@@ -109,7 +109,7 @@ class _SkillCategoryCard extends StatelessWidget {
                     category.category,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ),

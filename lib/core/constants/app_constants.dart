@@ -52,6 +52,8 @@ class AppConstants {
   static const String abberProject = 'assets/Abber.png';
   static const String shooterApp = 'assets/Shooter_app.png';
   static const String almotawef = 'assets/almotawef.png';
+  static const String remontada = 'assets/remontada.png';
+  static const String atmemly = 'assets/atmemly.png';
 
   // Tooltips
   static const String tooltipAppStore = 'App Store';
@@ -132,6 +134,18 @@ class AppConstants {
   // Social Media Handles (display names)
   static const String linkedInHandle = 'hamada-develop';
   static const String githubHandle = 'hamada-develop';
+
+  // Support
+  static const String sectionTitleSupport = 'Support Portfolio';
+  static const String supportMessage = 'If you like my work, please consider supporting me!';
+  static const String buyMeACoffeeUrl = 'https://www.buymeacoffee.com/hamadadevelop';
+  static const String patreonUrl = 'https://www.patreon.com/hamadadevelop';
+
+  // Messaging
+  static const String messageNameHint = 'Your Name';
+  static const String messageEmailHint = 'Your Email';
+  static const String messageBodyHint = 'Your Message...';
+  static const String messageSendButton = 'Send Message';
 
   // Footer
   static const String footerMadeWith = 'Made with Flutter 💙 by';
