@@ -150,7 +150,7 @@ class _ExperienceCard extends StatelessWidget {
                       child: Text(
                         experience.period,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.adaptiveTextSecondary,
                         ),
                       ),
                     ),
@@ -176,7 +176,7 @@ class _ExperienceCard extends StatelessWidget {
                   child: Text(
                     experience.period,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.adaptiveTextSecondary,
                     ),
                   ),
                 ),
@@ -211,7 +211,7 @@ class _ExperienceCard extends StatelessWidget {
                           achievement,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                                color: AppColors.textSecondary,
+                                color: context.adaptiveTextSecondary,
                                 height: 1.5,
                               ),
                         ),

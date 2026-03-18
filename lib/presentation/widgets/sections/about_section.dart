@@ -210,7 +210,7 @@ class _AboutSectionState extends State<AboutSection>
                     children: [
                       Text(
                             AppConstants.greetingPrefix,
-                            style: AppTextStyles.heroAccent.copyWith(
+                            style: AppTextStyles.heroAccent(context).copyWith(
                               fontSize: responsive.getValue(
                                 mobile: 16,
                                 tablet: 18,
@@ -231,7 +231,7 @@ class _AboutSectionState extends State<AboutSection>
                       GradientText(
                             text: AppConstants.name,
                             gradient: AppColors.textGradient,
-                            style: AppTextStyles.heroAccent.copyWith(
+                            style: AppTextStyles.heroAccent(context).copyWith(
                               fontSize: responsive.getValue(
                                 mobile: 16,
                                 tablet: 18,
@@ -367,7 +367,7 @@ class _AboutSectionState extends State<AboutSection>
                 // Title with Blur Effect
                 Text(
                       'I\'m a ${AppConstants.title}.',
-                      style: AppTextStyles.h3.copyWith(
+                      style: AppTextStyles.h3(context).copyWith(
                         fontSize: responsive.getValue(
                           mobile: 20,
                           tablet: 24,
@@ -413,7 +413,7 @@ class _AboutSectionState extends State<AboutSection>
                   child:
                       Text(
                             AppConstants.bio,
-                            style: AppTextStyles.bodyLarge.copyWith(
+                            style: AppTextStyles.bodyLarge(context).copyWith(
                               fontSize: responsive.getValue(
                                 mobile: 14,
                                 tablet: 16,

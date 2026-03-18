@@ -80,3 +80,9 @@ class AppColors {
   // Shadow Colors
   static const Color purpleShadow = Color(0x4D8B5CF6);
 }
+
+extension AdaptiveColors on BuildContext {
+  Color get adaptiveTextPrimary => Theme.of(this).brightness == Brightness.light ? const Color(0xFF1C1B1F) : AppColors.textPrimary;
+  Color get adaptiveTextSecondary => Theme.of(this).brightness == Brightness.light ? const Color(0xFF49454F) : AppColors.textSecondary;
+  Color get adaptiveTextTertiary => Theme.of(this).brightness == Brightness.light ? const Color(0xFF7A757F) : AppColors.textTertiary;
+}

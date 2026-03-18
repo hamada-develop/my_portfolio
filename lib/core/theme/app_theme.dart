@@ -11,10 +11,10 @@ class AppTheme {
     bool isHovered = false,
   }) {
     final isLight = Theme.of(context).brightness == Brightness.light;
-    final glassBg = isLight ? Colors.black.withValues(alpha: 0.03) : AppColors.glassBackground;
-    final glassBgHover = isLight ? Colors.black.withValues(alpha: 0.06) : AppColors.glassBackgroundHover;
-    final glassBorderColor = isLight ? Colors.black.withValues(alpha: 0.15) : AppColors.glassBorder;
-    final shadowColor = isLight ? Colors.black.withValues(alpha: 0.1) : AppColors.purpleShadow;
+    final glassBg = isLight ? Colors.white.withValues(alpha: 0.7) : AppColors.glassBackground;
+    final glassBgHover = isLight ? Colors.white.withValues(alpha: 0.85) : AppColors.glassBackgroundHover;
+    final glassBorderColor = isLight ? Colors.white.withValues(alpha: 0.5) : AppColors.glassBorder;
+    final shadowColor = isLight ? Colors.black.withValues(alpha: 0.04) : AppColors.purpleShadow;
 
     return BoxDecoration(
       color: isHovered
