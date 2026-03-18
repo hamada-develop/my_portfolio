@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../animations.dart';
+import '../constants/app_constants.dart';
 import '../destinations.dart';
 import '../transitions/nav_rail_transition.dart';
 import 'animated_floating_action_button.dart';
@@ -34,24 +36,27 @@ class DisappearingNavigationRail extends StatelessWidget {
         useIndicator: true,
         leading: Column(
           children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.menu),
-              tooltip: 'Menu',
-            ),
-            const SizedBox(height: 4),
+            // IconButton(
+            //   onPressed: () {},
+            //   icon: const Icon(Icons.menu),
+            //   tooltip: 'Menu',
+            // ),
+            // const SizedBox(height: 4),
             // Theme toggle
-            const ThemeToggleButton(),
+            // const ThemeToggleButton(),
             const SizedBox(height: 4),
             // Wrap FAB in RepaintBoundary for isolated repaints
             RepaintBoundary(
               child: AnimatedFloatingActionButton(
-                onPressed: () {
-                  // Add download resume logic
+                onPressed: () async {
+                  final url = Uri.parse(AppConstants.resumeUrl);
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url);
+                  }
                 },
-                icon: Icons.download,
+                icon: Icons.description_rounded, // Better icon for preview
                 isSmallScreen: isSmallScreen,
-                label: 'Download Resume',
+                label: 'Preview Resume',
               ),
             ),
           ],

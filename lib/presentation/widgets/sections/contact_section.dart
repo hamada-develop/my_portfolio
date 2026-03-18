@@ -96,7 +96,7 @@ class _ContactSectionState extends State<ContactSection> {
                   Text(
                     AppConstants.contactMessage,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.adaptiveTextSecondary,
                       height: 1.6,
                       fontSize: responsive.getValue(
                         mobile: 16,
@@ -142,7 +142,7 @@ class _ContactSectionState extends State<ContactSection> {
                     AppConstants.supportMessage,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.adaptiveTextSecondary,
                     ),
                   ),
                   const SizedBox(height: AppConstants.spacingLg),
@@ -185,14 +185,14 @@ class _ContactSectionState extends State<ContactSection> {
             '${AppConstants.footerMadeWith} ${AppConstants.name}',
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
+            ).textTheme.bodyMedium?.copyWith(color: context.adaptiveTextSecondary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppConstants.spacingSm),
           Text(
             '© ${DateTime.now().year} ${AppConstants.footerCopyright}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppColors.textSecondary.withValues(alpha: 0.7),
+              color: context.adaptiveTextSecondary.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -381,7 +381,7 @@ class _ContactItem extends StatelessWidget {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.adaptiveTextSecondary,
                   ),
                 ),
                 Text(

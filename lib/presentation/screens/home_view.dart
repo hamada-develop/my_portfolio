@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_banners/super_banners.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/animations.dart';
 import '../../../../core/widgets/animated_floating_action_button.dart';
@@ -141,8 +142,13 @@ class _HomeViewState extends State<HomeView>
               return Padding(
                 padding: const EdgeInsetsDirectional.only(end: 20),
                 child: AnimatedFAB(
-                  onPressed: () {},
-                  icon: Icons.download,
+                  onPressed: () async {
+                    final url = Uri.parse(AppConstants.resumeUrl);
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url);
+                    }
+                  },
+                  icon: Icons.description_rounded,
                   isVisible: deviceWide == DeviceWide.small,
                 ),
               );

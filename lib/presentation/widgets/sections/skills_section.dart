@@ -143,7 +143,7 @@ class _SkillCategoryCard extends StatelessWidget {
                   child: Text(
                     skill,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.adaptiveTextSecondary,
                     ),
                   ),
                 );
