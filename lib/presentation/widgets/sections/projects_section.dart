@@ -270,6 +270,8 @@ class _ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final responsive = context.responsive;
+    final isLight = Theme.of(context).brightness == Brightness.light;
+    final buttonBg = isLight ? Colors.black.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.1);
 
     return GlassCard(
           width: double.infinity,
@@ -381,7 +383,7 @@ class _ProjectCard extends StatelessWidget {
                           project.description,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                                color: AppColors.textSecondary,
+                                color: context.adaptiveTextSecondary,
                                 height: 1.5,
                               ),
                           maxLines: 4,
@@ -418,7 +420,7 @@ class _ProjectCard extends StatelessWidget {
                               tech,
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                    color: AppColors.textSecondary,
+                                    color: context.adaptiveTextSecondary,
                                     fontSize: 11,
                                   ),
                             ),
@@ -447,7 +449,7 @@ class _ProjectCard extends StatelessWidget {
                         icon: const Icon(Icons.apple),
                         tooltip: AppConstants.tooltipAppStore,
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.white.withValues(alpha: 0.1),
+                          backgroundColor: buttonBg,
                         ),
                       ),
                     const SizedBox(width: 8),
@@ -457,7 +459,7 @@ class _ProjectCard extends StatelessWidget {
                         icon: const Icon(Icons.android),
                         tooltip: AppConstants.tooltipPlayStore,
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.white.withValues(alpha: 0.1),
+                          backgroundColor: buttonBg,
                         ),
                       ),
                     const SizedBox(width: 8),
@@ -467,7 +469,7 @@ class _ProjectCard extends StatelessWidget {
                         icon: const Icon(Icons.language),
                         tooltip: AppConstants.tooltipWebsite,
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.white.withValues(alpha: 0.1),
+                          backgroundColor: buttonBg,
                         ),
                       ),
                   ],

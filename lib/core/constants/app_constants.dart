@@ -24,6 +24,8 @@ class AppConstants {
   static const String linkedInUrl =
       'https://www.linkedin.com/in/hamada-develop';
   static const String githubUrl = 'https://github.com/hamada-develop';
+  static const String resumeUrl =
+      'https://drive.google.com/file/d/1e48sJZ8wwPRS14URcS_Lqh3HimJJRAh9/view?usp=share_link';
 
   // App Links
   static const String aberAppStore = 'https://apps.apple.com/app/aber';

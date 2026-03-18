@@ -110,7 +110,7 @@ class SectionTitle extends StatelessWidget {
             subtitle!,
             style: Theme.of(
               context,
-            ).textTheme.bodyLarge?.copyWith(color: AppColors.textTertiary),
+            ).textTheme.bodyLarge?.copyWith(color: context.adaptiveTextTertiary),
             textAlign: textAlign ?? TextAlign.start,
           ),
         ],
