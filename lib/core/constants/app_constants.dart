@@ -21,7 +21,7 @@ class AppConstants {
   // Profile Info
   static const String profileTitlePrimary = 'Flutter Developer';
   static const String profileTitleSecondary = 'Building Scalable Mobile Apps';
-  static const String profileLocation = 'Egypt, El-Fayoum';
+  static const String profileLocation = 'Egypt, Cairo';
   static const String profileOpenToRemote = 'Open to Remote';
   static const String profileAvailableForRelocation =
       'Available for Relocation';
@@ -152,7 +152,6 @@ class AppConstants {
   // Social Media Handles (display names)
   static const String linkedInHandle = 'hamada-develop';
   static const String githubHandle = 'hamada-develop';
-
 
   // Messaging
   static const String messageNameHint = 'Your Name';
