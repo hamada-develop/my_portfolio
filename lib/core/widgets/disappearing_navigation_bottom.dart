@@ -22,10 +22,15 @@ class DisappearingNavigationBottom extends StatelessWidget {
     return AnimatedBottomNavBar(
       isVisible: isSmallScreen,
       child: BottomNavigationBar(
+        currentIndex: selectedIndex,
+        onTap: onDestinationSelected,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        backgroundColor: Theme.of(context).colorScheme.surfaceBright,
         items: destinations.map((d) {
           return BottomNavigationBarItem(
-            backgroundColor: Theme.of(context).colorScheme.surfaceBright,
-            icon: Icon(d.icon,color: Colors.white,),
+            icon: Icon(d.icon),
             label: d.label,
           );
         }).toList(),

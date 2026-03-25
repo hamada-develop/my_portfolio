@@ -108,7 +108,7 @@ class _ContactSectionState extends State<ContactSection> {
                   ),
                   const SizedBox(height: AppConstants.spacingXl),
 
-                  // Contact & Support Row for Layouts
+                  // Contact Row for Layouts
                   responsive.isDesktop || responsive.isTablet
                       ? Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,45 +126,7 @@ class _ContactSectionState extends State<ContactSection> {
                           ],
                         ),
 
-                  const SizedBox(height: AppConstants.spacingXxl),
-                  const Divider(color: AppColors.glassBorder),
-                  const SizedBox(height: AppConstants.spacingXl),
 
-                  // Support Portfolio
-                  Text(
-                    AppConstants.sectionTitleSupport,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: AppConstants.spacingMd),
-                  Text(
-                    AppConstants.supportMessage,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: context.adaptiveTextSecondary,
-                    ),
-                  ),
-                  const SizedBox(height: AppConstants.spacingLg),
-                  Wrap(
-                    spacing: AppConstants.spacingLg,
-                    runSpacing: AppConstants.spacingMd,
-                    alignment: WrapAlignment.center,
-                    children: [
-                      _SupportItem(
-                        icon: Icons.coffee,
-                        label: 'Buy me a Coffee',
-                        color: Colors.orange,
-                        onTap: () => _launchUrl(AppConstants.buyMeACoffeeUrl),
-                      ),
-                      _SupportItem(
-                        icon: Icons.favorite,
-                        label: 'Patreon',
-                        color: AppColors.primaryPink,
-                        onTap: () => _launchUrl(AppConstants.patreonUrl),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -400,49 +362,4 @@ class _ContactItem extends StatelessWidget {
   }
 }
 
-class _SupportItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
 
-  const _SupportItem({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.spacingLg,
-          vertical: AppConstants.spacingMd,
-        ),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          border: Border.all(color: color.withValues(alpha: 0.3)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color),
-            const SizedBox(width: AppConstants.spacingMd),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
