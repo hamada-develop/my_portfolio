@@ -153,13 +153,6 @@ class AppConstants {
   static const String linkedInHandle = 'hamada-develop';
   static const String githubHandle = 'hamada-develop';
 
-  // Support
-  static const String sectionTitleSupport = 'Support Portfolio';
-  static const String supportMessage =
-      'If you like my work, please consider supporting me!';
-  static const String buyMeACoffeeUrl =
-      'https://www.buymeacoffee.com/hamadadevelop';
-  static const String patreonUrl = 'https://www.patreon.com/hamadadevelop';
 
   // Messaging
   static const String messageNameHint = 'Your Name';
