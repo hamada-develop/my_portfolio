@@ -17,8 +17,24 @@ class AppConstants {
   // Contact Information
   static const String email = 'hamada.devlop2@gmail.com';
   static const String phone = '+201141403984';
-  static const String location = 'Egypt, El-Fayoum';
-  static const String availability = 'Ready for relocating';
+
+  // Profile Info
+  static const String profileTitlePrimary = 'Flutter Developer';
+  static const String profileTitleSecondary = 'Building Scalable Mobile Apps';
+  static const String profileLocation = 'Egypt, El-Fayoum';
+  static const String profileOpenToRemote = 'Open to Remote';
+  static const String profileAvailableForRelocation =
+      'Available for Relocation';
+
+  // Profile Stats
+  static const String statYearsExperienceValue = '5+';
+  static const String statYearsExperienceLabel = 'Years Experience';
+  static const String statAppsBuiltValue = '30+';
+  static const String statAppsBuiltLabel = 'Apps Built';
+  static const String statDownloadsValue = '12K+';
+  static const String statDownloadsLabel = 'Downloads';
+  static const String statOpenSourceValue = '10+';
+  static const String statOpenSourceLabel = 'Open Source PRs';
 
   // Social Links
   static const String linkedInUrl =
@@ -139,8 +155,10 @@ class AppConstants {
 
   // Support
   static const String sectionTitleSupport = 'Support Portfolio';
-  static const String supportMessage = 'If you like my work, please consider supporting me!';
-  static const String buyMeACoffeeUrl = 'https://www.buymeacoffee.com/hamadadevelop';
+  static const String supportMessage =
+      'If you like my work, please consider supporting me!';
+  static const String buyMeACoffeeUrl =
+      'https://www.buymeacoffee.com/hamadadevelop';
   static const String patreonUrl = 'https://www.patreon.com/hamadadevelop';
 
   // Messaging
