@@ -113,7 +113,7 @@ class _AboutSectionState extends State<AboutSection> {
                 // Main Tagline with Cascading Animation
                 Column(
                   children: [
-                    Text(
+                    SelectableText(
                           AppConstants.heroLine1,
                           style: AppTextStyles.heroTitleResponsive(context),
                           textAlign: TextAlign.center,
@@ -151,7 +151,7 @@ class _AboutSectionState extends State<AboutSection> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children:
                           [
-                                Text(
+                                SelectableText(
                                   AppConstants.heroLine3Prefix,
                                   style: AppTextStyles.heroTitleResponsive(
                                     context,
@@ -180,7 +180,7 @@ class _AboutSectionState extends State<AboutSection> {
                                         alpha: 0.5,
                                       ),
                                     ),
-                                Text(
+                                SelectableText(
                                   AppConstants.heroLine3Suffix,
                                   style: AppTextStyles.heroTitleResponsive(
                                     context,
@@ -208,7 +208,7 @@ class _AboutSectionState extends State<AboutSection> {
                   ),
                 ),
                 // Name
-                Text(
+                SelectableText(
                       AppConstants.name,
                       style: AppTextStyles.h1(context).copyWith(
                         fontSize: responsive.getValue(
@@ -241,7 +241,7 @@ class _AboutSectionState extends State<AboutSection> {
                       spacing: 8,
                       runSpacing: 4,
                       children: [
-                        Text(
+                        SelectableText(
                           AppConstants.profileTitlePrimary,
                           style: AppTextStyles.h3(context).copyWith(
                             color: AppColors.primaryCyan,
@@ -253,7 +253,7 @@ class _AboutSectionState extends State<AboutSection> {
                             ),
                           ),
                         ),
-                        Text(
+                        SelectableText(
                           '|',
                           style: AppTextStyles.h3(context).copyWith(
                             color: AppColors.primaryCyan,
@@ -264,7 +264,7 @@ class _AboutSectionState extends State<AboutSection> {
                             ),
                           ),
                         ),
-                        Text(
+                        SelectableText(
                           AppConstants.profileTitleSecondary,
                           style: AppTextStyles.h3(context).copyWith(
                             color: AppColors.primaryCyan,
@@ -452,7 +452,7 @@ class _InfoChip extends StatelessWidget {
           ),
           const SizedBox(width: 8),
         ],
-        Text(
+        SelectableText(
           text,
           style: AppTextStyles.bodyMedium(context).copyWith(
             color: AppColors.textSecondary,
@@ -467,7 +467,7 @@ class _InfoChip extends StatelessWidget {
 class _DotSeparator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return SelectableText(
       '•',
       style: TextStyle(color: AppColors.textTertiary, fontSize: 18),
     );
@@ -486,7 +486,7 @@ class _StatItem extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
+        SelectableText(
           value,
           style: AppTextStyles.h2(context).copyWith(
             color: AppColors.primaryCyan,
@@ -503,7 +503,7 @@ class _StatItem extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
+        SelectableText(
           label,
           style: AppTextStyles.bodyMedium(context).copyWith(
             color: AppColors.textSecondary,
