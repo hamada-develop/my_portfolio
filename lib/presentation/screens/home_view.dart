@@ -249,26 +249,12 @@ class _HomeContentState extends State<HomeContent> {
     }
   }
 
-  Future<void> _scrollToSection(int index) async {
-    final context = _sectionKeys[index].currentContext;
-    if (context != null) {
-      _isAutoScrolling = true;
-      await Scrollable.ensureVisible(
-        context,
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeInOut,
-        // Align section to top of screen
-        alignment: 0.0,
-      );
-      // Small delay to ensure physics have settled
-      await Future.delayed(const Duration(milliseconds: 100));
-      _isAutoScrolling = false;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<HomeCubit>();
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
+
     return Shortcuts(
       shortcuts: <ShortcutActivator, Intent>{
         const SingleActivator(LogicalKeyboardKey.arrowDown):
@@ -309,57 +295,153 @@ class _HomeContentState extends State<HomeContent> {
         },
         child: Focus(
           focusNode: _focusNode,
-          child: BlocListener<HomeCubit, HomeState>(
-            listenWhen: (previous, current) =>
-                previous.destination != current.destination,
-            listener: (context, state) {
-              if (_manualScrollDestinations.remove(state.destination)) {
-                return;
-              }
-              if (_scrollController.hasClients) {
-                _scrollToSection(state.destination);
-              }
-            },
-            child: Container(
-              margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
-              decoration: BoxDecoration(
-                color: widget.colorScheme.surface,
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                child: CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: RepaintBoundary(
-                        child: AboutSection(key: _sectionKeys[0]),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: RepaintBoundary(
-                        child: ProjectsSection(key: _sectionKeys[1]),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: RepaintBoundary(
-                        child: WorkHistorySection(key: _sectionKeys[2]),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: RepaintBoundary(
-                        child: SkillsSection(key: _sectionKeys[3]),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: RepaintBoundary(
-                        child: ContactSection(key: _sectionKeys[4]),
-                      ),
-                    ),
-                  ],
+          child: isMobile
+              ? _MobileContent(colorScheme: widget.colorScheme)
+              : _DesktopContent(
+                  colorScheme: widget.colorScheme,
+                  scrollController: _scrollController,
+                  sectionKeys: _sectionKeys,
+                  manualScrollDestinations: _manualScrollDestinations,
+                ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Mobile layout: shows one section at a time with animated transitions.
+class _MobileContent extends StatelessWidget {
+  final ColorScheme colorScheme;
+
+  const _MobileContent({required this.colorScheme});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<HomeCubit, HomeState, int>(
+      selector: (state) => state.destination,
+      builder: (context, destination) {
+        final sections = <Widget>[
+          const AboutSection(),
+          const ProjectsSection(),
+          const WorkHistorySection(),
+          const SkillsSection(),
+          const ContactSection(),
+        ];
+
+        return Container(
+          margin: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 350),
+              switchInCurve: Curves.easeOut,
+              switchOutCurve: Curves.easeIn,
+              transitionBuilder: (child, animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0.05, 0),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
+                  ),
+                );
+              },
+              child: SingleChildScrollView(
+                key: ValueKey<int>(destination),
+                child: RepaintBoundary(
+                  child: sections[destination],
                 ),
               ),
             ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Desktop layout: all sections in a single scrollable view with scroll-spy.
+class _DesktopContent extends StatelessWidget {
+  final ColorScheme colorScheme;
+  final ScrollController scrollController;
+  final List<GlobalKey> sectionKeys;
+  final Set<int> manualScrollDestinations;
+
+  const _DesktopContent({
+    required this.colorScheme,
+    required this.scrollController,
+    required this.sectionKeys,
+    required this.manualScrollDestinations,
+  });
+
+  Future<void> _scrollToSection(int index) async {
+    final context = sectionKeys[index].currentContext;
+    if (context != null) {
+      await Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOut,
+        alignment: 0.0,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<HomeCubit, HomeState>(
+      listenWhen: (previous, current) =>
+          previous.destination != current.destination,
+      listener: (context, state) {
+        if (manualScrollDestinations.remove(state.destination)) {
+          return;
+        }
+        if (scrollController.hasClients) {
+          _scrollToSection(state.destination);
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(top: 24, left: 16, right: 16),
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              SliverToBoxAdapter(
+                child: RepaintBoundary(
+                  child: AboutSection(key: sectionKeys[0]),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: RepaintBoundary(
+                  child: ProjectsSection(key: sectionKeys[1]),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: RepaintBoundary(
+                  child: WorkHistorySection(key: sectionKeys[2]),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: RepaintBoundary(
+                  child: SkillsSection(key: sectionKeys[3]),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: RepaintBoundary(
+                  child: ContactSection(key: sectionKeys[4]),
+                ),
+              ),
+            ],
           ),
         ),
       ),

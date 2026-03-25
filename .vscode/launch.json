@@ -1,22 +1,19 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "book",
+            "name": "Hamada's Portfolio",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "book (profile mode)",
+            "name": "Hamada's Portfolio (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "book (release mode)",
+            "name": "Hamada's Portfolio (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

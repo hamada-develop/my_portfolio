@@ -6,7 +6,6 @@ import '../constants/app_constants.dart';
 import '../destinations.dart';
 import '../transitions/nav_rail_transition.dart';
 import 'animated_floating_action_button.dart';
-import 'theme_toggle_button.dart';
 
 class DisappearingNavigationRail extends StatelessWidget {
   const DisappearingNavigationRail({

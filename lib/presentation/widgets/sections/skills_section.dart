@@ -98,14 +98,14 @@ class _SkillCategoryCard extends StatelessWidget {
                       AppConstants.radiusMd,
                     ),
                   ),
-                  child: Text(
+                  child: SelectableText(
                     category.icon ?? '',
                     style: const TextStyle(fontSize: 24),
                   ),
                 ),
                 const SizedBox(width: AppConstants.spacingMd),
                 Expanded(
-                  child: Text(
+                  child: SelectableText(
                     category.category,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
@@ -140,7 +140,7 @@ class _SkillCategoryCard extends StatelessWidget {
                       width: 1,
                     ),
                   ),
-                  child: Text(
+                  child: SelectableText(
                     skill,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: context.adaptiveTextSecondary,

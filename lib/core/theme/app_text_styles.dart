@@ -132,6 +132,8 @@ class AppTextStyles {
     if (width < 600) {
       return heroTitle(context).copyWith(fontSize: 40);
     } else if (width < 1024) {
+      return heroTitle(context).copyWith(fontSize: 44);
+    } else if (width < 1450) {
       return heroTitle(context).copyWith(fontSize: 56);
     }
     return heroTitle(context);
@@ -142,6 +144,9 @@ class AppTextStyles {
     if (width < 600) {
       return h1(context).copyWith(fontSize: 32);
     } else if (width < 1024) {
+      return h1(context).copyWith(fontSize: 32);
+    }
+    else if (width < 1450) {
       return h1(context).copyWith(fontSize: 40);
     }
     return h1(context);

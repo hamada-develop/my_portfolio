@@ -99,7 +99,7 @@ class _ExperienceCard extends StatelessWidget {
                         AppConstants.radiusMd,
                       ),
                     ),
-                    child: Text(
+                    child: SelectableText(
                       experience.icon,
                       style: const TextStyle(fontSize: 24),
                     ),
@@ -111,7 +111,7 @@ class _ExperienceCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        SelectableText(
                           experience.role,
                           style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(
@@ -120,7 +120,7 @@ class _ExperienceCard extends StatelessWidget {
                               ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
+                        SelectableText(
                           experience.company,
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(
@@ -147,7 +147,7 @@ class _ExperienceCard extends StatelessWidget {
                           AppConstants.radiusFull,
                         ),
                       ),
-                      child: Text(
+                      child: SelectableText(
                         experience.period,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: context.adaptiveTextSecondary,
@@ -173,7 +173,7 @@ class _ExperienceCard extends StatelessWidget {
                       AppConstants.radiusFull,
                     ),
                   ),
-                  child: Text(
+                  child: SelectableText(
                     experience.period,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: context.adaptiveTextSecondary,
@@ -207,7 +207,7 @@ class _ExperienceCard extends StatelessWidget {
                       ),
                       const SizedBox(width: AppConstants.spacingSm),
                       Expanded(
-                        child: Text(
+                        child: SelectableText(
                           achievement,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
